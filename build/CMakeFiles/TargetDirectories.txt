@@ -1,0 +1,10 @@
+/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles/sim_cache.dir
+/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles/edit_cache.dir
+/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles/rebuild_cache.dir
+/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/enums/CMakeFiles/edit_cache.dir
+/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/enums/CMakeFiles/rebuild_cache.dir
+/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache/CMakeFiles/mem_cache.dir
+/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache/CMakeFiles/edit_cache.dir
+/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache/CMakeFiles/rebuild_cache.dir
+/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache/src/CMakeFiles/edit_cache.dir
+/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache/src/CMakeFiles/rebuild_cache.dir
