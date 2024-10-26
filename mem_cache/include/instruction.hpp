@@ -6,7 +6,6 @@ class Instruction
 public:
      Instruction(unsigned short instruction, unsigned int address);
 
-     // Public fields
      unsigned short instruction;
      unsigned int address;
 };

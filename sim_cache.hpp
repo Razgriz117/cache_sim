@@ -18,6 +18,7 @@ public:
      void constructCaches();
      void addCache(const Cache &cache);
      void readInstructions();
+     void printInstructions();
 
      // Getters
      unsigned int getBlocksize() const { return blocksize; }

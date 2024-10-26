@@ -5,6 +5,7 @@
 #include <vector>
 
 // Local enums
+#include "enum_comparators.hpp"
 #include "inclusion_property.hpp"
 #include "replacement_policy.hpp"
 #include "memory_access.hpp"
@@ -28,16 +29,7 @@ Sim_Cache::Sim_Cache(unsigned int blocksize, const std::vector<unsigned int> &ca
      numCaches = cache_sizes.size();
      constructCaches();
      readInstructions();
-
-     for (const auto &instr : instructions)
-     {
-          // Print "Write" for 1 and "Read" for 0
-          std::string instructionType = (instr.instruction == 1) ? "Write" : "Read";
-
-          // Print the instruction and the address in hexadecimal
-          std::cout << "Instruction: " << instructionType
-                    << ", Address: 0x" << std::hex << instr.address << std::endl;
-     }
+     printInstructions();
 }
 
 void Sim_Cache::constructCaches()
@@ -107,4 +99,17 @@ void Sim_Cache::readInstructions()
      }
 
      file.close(); // Close the file after reading
+}
+
+void Sim_Cache::printInstructions()
+{
+     std::string instruction;
+     for (const auto &mem_access : instructions)
+     {
+          instruction = (mem_access.instruction == MemoryAccess::Write) ? "Write" : "Read";
+
+          // Print the instruction and the address in hexadecimal
+          std::cout << "Instruction: " << instruction
+                    << ", Address: 0x" << std::hex << mem_access.address << std::endl;
+     }
 }

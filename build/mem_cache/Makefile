@@ -202,6 +202,30 @@ src/instruction.cpp.s:
 	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/src/instruction.cpp.s
 .PHONY : src/instruction.cpp.s
 
+src/set.o: src/set.cpp.o
+.PHONY : src/set.o
+
+# target to build an object file
+src/set.cpp.o:
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o
+.PHONY : src/set.cpp.o
+
+src/set.i: src/set.cpp.i
+.PHONY : src/set.i
+
+# target to preprocess a source file
+src/set.cpp.i:
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.i
+.PHONY : src/set.cpp.i
+
+src/set.s: src/set.cpp.s
+.PHONY : src/set.s
+
+# target to generate assembly for a file
+src/set.cpp.s:
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.s
+.PHONY : src/set.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -220,6 +244,9 @@ help:
 	@echo "... src/instruction.o"
 	@echo "... src/instruction.i"
 	@echo "... src/instruction.s"
+	@echo "... src/set.o"
+	@echo "... src/set.i"
+	@echo "... src/set.s"
 .PHONY : help
 
 

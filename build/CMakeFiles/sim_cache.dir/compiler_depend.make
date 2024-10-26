@@ -193,10 +193,22 @@ CMakeFiles/sim_cache.dir/sim_cache.cpp.o: ../sim_cache.cpp \
   /usr/include/c++/11/bits/stl_vector.h \
   /usr/include/c++/11/bits/stl_bvector.h \
   /usr/include/c++/11/bits/vector.tcc \
+  ../enums/include/enum_comparators.hpp \
+  ../enums/include/inclusion_property.hpp \
+  ../enums/include/replacement_policy.hpp \
+  ../enums/include/memory_access.hpp \
   ../enums/include/inclusion_property.hpp \
   ../enums/include/replacement_policy.hpp \
   ../enums/include/memory_access.hpp \
   ../mem_cache/include/cache.hpp \
+  ../mem_cache/include/set.hpp \
+  /usr/include/c++/11/queue \
+  /usr/include/c++/11/deque \
+  /usr/include/c++/11/bits/stl_deque.h \
+  /usr/include/c++/11/bits/deque.tcc \
+  /usr/include/c++/11/bits/stl_heap.h \
+  /usr/include/c++/11/bits/stl_queue.h \
+  /usr/include/c++/11/bits/uses_allocator.h \
   ../mem_cache/include/block.hpp \
   /usr/include/c++/11/cstddef \
   ../sim_cache.hpp \
@@ -391,6 +403,14 @@ CMakeFiles/sim_cache.dir/simulator.cpp.o: ../simulator.cpp \
   ../mem_cache/include/cache.hpp \
   ../enums/include/inclusion_property.hpp \
   ../enums/include/replacement_policy.hpp \
+  ../mem_cache/include/set.hpp \
+  /usr/include/c++/11/queue \
+  /usr/include/c++/11/deque \
+  /usr/include/c++/11/bits/stl_deque.h \
+  /usr/include/c++/11/bits/deque.tcc \
+  /usr/include/c++/11/bits/stl_heap.h \
+  /usr/include/c++/11/bits/stl_queue.h \
+  /usr/include/c++/11/bits/uses_allocator.h \
   ../mem_cache/include/block.hpp \
   /usr/include/c++/11/cstddef \
   ../sim_cache.hpp \
@@ -399,9 +419,19 @@ CMakeFiles/sim_cache.dir/simulator.cpp.o: ../simulator.cpp \
 
 /usr/include/c++/11/limits:
 
-../sim_cache.hpp:
+/usr/include/c++/11/bits/uses_allocator.h:
+
+/usr/include/c++/11/bits/stl_heap.h:
+
+/usr/include/c++/11/bits/stl_deque.h:
+
+../mem_cache/include/set.hpp:
 
 ../enums/include/replacement_policy.hpp:
+
+../sim_cache.hpp:
+
+../enums/include/enum_comparators.hpp:
 
 /usr/include/c++/11/bits/vector.tcc:
 
@@ -493,6 +523,8 @@ CMakeFiles/sim_cache.dir/simulator.cpp.o: ../simulator.cpp \
 
 /usr/include/c++/11/bits/functional_hash.h:
 
+/usr/include/c++/11/bits/stl_queue.h:
+
 /usr/include/c++/11/bits/stl_iterator_base_funcs.h:
 
 /usr/include/ctype.h:
@@ -583,6 +615,8 @@ CMakeFiles/sim_cache.dir/simulator.cpp.o: ../simulator.cpp \
 
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
+/usr/include/c++/11/deque:
+
 /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
 
 /usr/include/c++/11/ios:
@@ -598,6 +632,8 @@ CMakeFiles/sim_cache.dir/simulator.cpp.o: ../simulator.cpp \
 /usr/include/c++/11/pstl/pstl_config.h:
 
 /usr/include/x86_64-linux-gnu/sys/single_threaded.h:
+
+/usr/include/c++/11/queue:
 
 /usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 
@@ -786,6 +822,8 @@ CMakeFiles/sim_cache.dir/simulator.cpp.o: ../simulator.cpp \
 /usr/include/c++/11/ext/alloc_traits.h:
 
 /usr/include/c++/11/bits/cxxabi_forced.h:
+
+/usr/include/c++/11/bits/deque.tcc:
 
 /usr/include/x86_64-linux-gnu/bits/select.h:
 

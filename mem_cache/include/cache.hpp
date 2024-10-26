@@ -6,7 +6,7 @@
 
 #include "inclusion_property.hpp"
 #include "replacement_policy.hpp"
-#include "block.hpp"
+#include "set.hpp"
 
 class Cache
 {
@@ -22,7 +22,7 @@ public:
      unsigned int getNumSets() const { return numSets; }
      unsigned int getReplacementPolicy() const { return replacement_policy; }
      unsigned int getInclusionProperty() const { return inclusion_property; }
-     const std::vector<std::vector<Block>> &getCache() const { return cache; }
+     const std::vector<Set> &getCache() const { return cache; }
 
 private : 
      unsigned int assoc;
@@ -31,7 +31,7 @@ private :
      unsigned int numSets;
      unsigned int replacement_policy;
      unsigned int inclusion_property;
-     std::vector<std::vector<Block>> cache;
+     std::vector<Set> cache;
 };
 
 #endif // CACHE_HPP

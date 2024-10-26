@@ -1,2 +1,2 @@
-/usr/bin/ar qc libmem_cache.a CMakeFiles/mem_cache.dir/src/instruction.cpp.o CMakeFiles/mem_cache.dir/src/block.cpp.o CMakeFiles/mem_cache.dir/src/cache.cpp.o
+/usr/bin/ar qc libmem_cache.a CMakeFiles/mem_cache.dir/src/instruction.cpp.o CMakeFiles/mem_cache.dir/src/block.cpp.o CMakeFiles/mem_cache.dir/src/cache.cpp.o CMakeFiles/mem_cache.dir/src/set.cpp.o
 /usr/bin/ranlib libmem_cache.a

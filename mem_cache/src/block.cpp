@@ -42,9 +42,3 @@ unsigned char Block::readByte(std::size_t index) const
      }
      return data[index];
 }
-
-// Getter method to retrieve the block size
-std::size_t Block::getBlockSize() const
-{
-     return blocksize;
-}
