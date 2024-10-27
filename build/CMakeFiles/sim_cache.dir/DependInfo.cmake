@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/sim_cache.cpp" "CMakeFiles/sim_cache.dir/sim_cache.cpp.o" "gcc" "CMakeFiles/sim_cache.dir/sim_cache.cpp.o.d"
-  "/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/simulator.cpp" "CMakeFiles/sim_cache.dir/simulator.cpp.o" "gcc" "CMakeFiles/sim_cache.dir/simulator.cpp.o.d"
+  "/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/main.cpp" "CMakeFiles/sim_cache.dir/main.cpp.o" "gcc" "CMakeFiles/sim_cache.dir/main.cpp.o.d"
+  "/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/mem_architecture_sim.cpp" "CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o" "gcc" "CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o.d"
   )
 
 # Targets to which this target links.

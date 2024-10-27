@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/sim_cache.dir/sim_cache.cpp.o"
-  "CMakeFiles/sim_cache.dir/sim_cache.cpp.o.d"
-  "CMakeFiles/sim_cache.dir/simulator.cpp.o"
-  "CMakeFiles/sim_cache.dir/simulator.cpp.o.d"
+  "CMakeFiles/sim_cache.dir/main.cpp.o"
+  "CMakeFiles/sim_cache.dir/main.cpp.o.d"
+  "CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o"
+  "CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o.d"
   "sim_cache"
   "sim_cache.pdb"
 )

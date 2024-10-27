@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/mem_architecture_sim.dir/mem_architecture_sim.cpp.o CMakeFiles/mem_architecture_sim.dir/main.cpp.o -o mem_architecture_sim  mem_cache/libmem_cache.a 

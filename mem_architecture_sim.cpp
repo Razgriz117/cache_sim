@@ -5,51 +5,82 @@
 #include <vector>
 
 // Local enums
-#include "enum_comparators.hpp"
 #include "inclusion_property.hpp"
 #include "replacement_policy.hpp"
 #include "memory_access.hpp"
 
 // Local libraries
+#include "block.hpp"
 #include "cache.hpp"
-#include "sim_cache.hpp"
+#include "mem_architecture_sim.hpp"
 
 // Global constants
 #define HEX 16
 
-// Constructor for Sim_Cache
-Sim_Cache::Sim_Cache(unsigned int blocksize, const std::vector<unsigned int> &cache_sizes,
+// Constructor for MemArchitectureSim
+MemArchitectureSim::MemArchitectureSim(unsigned int blocksize, 
+                     const std::vector<unsigned int> &cache_sizes,
                      const std::vector<unsigned int> &cache_assocs, 
-                     unsigned int replacement_policy, unsigned int inclusion_property, 
+                     unsigned int repl_policy, unsigned int incl_property, 
                      const std::string &trace_file)
     : blocksize(blocksize), cache_sizes(cache_sizes), cache_assocs(cache_assocs),
     replacement_policy(replacement_policy), inclusion_property(inclusion_property), 
     trace_file(trace_file)
 {
+     inclusion_property = static_cast<InclusionProperty>(incl_property);
+     replacement_policy = static_cast<ReplacementPolicy>(repl_policy);
+
      numCaches = cache_sizes.size();
      constructCaches();
      readInstructions();
      printInstructions();
 }
 
-void Sim_Cache::constructCaches()
+Block MemArchitectureSim::write(const Address &addr)
 {
-     for (std::size_t i = 0; i < numCaches; i++)
+     // Handle inclusion property.
+     switch (inclusion_property)
      {
-          caches.emplace_back(
-              Cache(
-                  blocksize,
-                  cache_sizes[i], cache_assocs[i],
-                  replacement_policy, inclusion_property));
+     case InclusionProperty::NonInclusive:
+          break;
+
+     case InclusionProperty::Inclusive:
+          break;
      }
 }
 
-void Sim_Cache::addCache(const Cache &cache)
+Block MemArchitectureSim::write_back(const Address &addr)
+{
+}
+
+Block MemArchitectureSim::writeToCache(unsigned int cache_idx, const Address &addr)
+{
+
+}
+
+void MemArchitectureSim::constructCaches()
+{
+     // inclusion_property = static_cast<InclusionProperty>(inclusion_property);
+     // replacement_policy = static_cast<ReplacementPolicy>(replacement_policy);
+
+     for (std::size_t i = 0; i < numCaches; i++)
+     {
+          caches.emplace_back(
+               Cache(
+                    blocksize,
+                    cache_sizes[i], cache_assocs[i],
+                    replacement_policy, inclusion_property
+               )
+          );
+     }
+}
+
+void MemArchitectureSim::addCache(const Cache &cache)
 {
      caches.push_back(cache);
 }
 
-void Sim_Cache::readInstructions()
+void MemArchitectureSim::readInstructions()
 {
      std::ifstream file(trace_file);
 
@@ -101,7 +132,7 @@ void Sim_Cache::readInstructions()
      file.close(); // Close the file after reading
 }
 
-void Sim_Cache::printInstructions()
+void MemArchitectureSim::printInstructions()
 {
      std::string instruction;
      for (const auto &mem_access : instructions)

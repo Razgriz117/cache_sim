@@ -7,7 +7,7 @@
 
 // Local libraries
 #include "cache.hpp"
-#include "sim_cache.hpp"
+#include "mem_architecture_sim.hpp"
 
 // Global constants
 #define DECIMAL 10
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
      std::vector<unsigned int> CACHE_SIZES = {L1_SIZE, L2_SIZE};
      std::vector<unsigned int> CACHE_ASSOCS = {L1_ASSOC, L2_ASSOC};
 
-     Sim_Cache myCache(
+     MemArchitectureSim simulator(
          BLOCKSIZE,
          CACHE_SIZES,
          CACHE_ASSOCS,

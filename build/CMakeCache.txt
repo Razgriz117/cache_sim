@@ -220,6 +220,15 @@ EXECUTABLE_OUTPUT_PATH:PATH=
 LIBRARY_OUTPUT_PATH:PATH=
 
 //Value Computed by CMake
+mem_architecture_sim_BINARY_DIR:STATIC=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build
+
+//Value Computed by CMake
+mem_architecture_sim_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+mem_architecture_sim_SOURCE_DIR:STATIC=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator
+
+//Value Computed by CMake
 sim_cache_BINARY_DIR:STATIC=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build
 
 //Value Computed by CMake

@@ -6,8 +6,8 @@ add_subdirectory(enums)
 add_subdirectory(mem_cache)
 
 add_executable(sim_cache 
-     sim_cache.cpp
-     simulator.cpp
+     mem_architecture_sim.cpp
+     main.cpp
 )
 
 target_include_directories(sim_cache PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

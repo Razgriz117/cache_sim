@@ -3,15 +3,15 @@
 
 #include "block.hpp"
 
-Block::Block(std::size_t blocksize)
-    : blocksize(blocksize), data(new unsigned char[blocksize])
+Block::Block(std::size_t blocksize, const Address &addr)
+    : blocksize(blocksize), data(new unsigned char[blocksize]), address(addr)
 {
      // Initialize the data array to zero
      // std::memset(data, 0, blocksize); FIX CONSTRUCTOR
 }
 
-Block::Block(std::size_t blocksize, const unsigned char *inputData)
-    : blocksize(blocksize), data(new unsigned char[blocksize])
+Block::Block(std::size_t blocksize, const Address &addr, const unsigned char *inputData)
+    : blocksize(blocksize), data(new unsigned char[blocksize]), address(addr)
 {
      
      std::memcpy(data, inputData, blocksize);
@@ -21,6 +21,28 @@ Block::Block(std::size_t blocksize, const unsigned char *inputData)
 Block::~Block()
 {
      // delete[] data; FIX DESTRUCTOR
+}
+
+// Copy assignment operator
+Block &Block::operator=(const Block &other)
+{
+     // If we assign a block to itself in memory, assign its reference (i.e. do nothing).
+     if (this == &other)
+     {
+          return *this;
+     }
+
+     // If blocksize differs, we have incompatible blocks.
+     if (blocksize != other.blocksize)
+     {
+          throw std::runtime_error("Mismatched block sizes in assignment");
+     }
+
+     // Otherwise, copy the data contents from the right argument's object into the left's.
+     std::memcpy(data, other.data, blocksize);
+
+     // Address reference remains the same
+     return *this;
 }
 
 // Method to write a byte to the data array at the specified index

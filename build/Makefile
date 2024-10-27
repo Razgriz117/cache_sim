@@ -142,53 +142,53 @@ mem_cache/fast:
 	$(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/build
 .PHONY : mem_cache/fast
 
-sim_cache.o: sim_cache.cpp.o
-.PHONY : sim_cache.o
+main.o: main.cpp.o
+.PHONY : main.o
 
 # target to build an object file
-sim_cache.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/sim_cache.cpp.o
-.PHONY : sim_cache.cpp.o
+main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/main.cpp.o
+.PHONY : main.cpp.o
 
-sim_cache.i: sim_cache.cpp.i
-.PHONY : sim_cache.i
+main.i: main.cpp.i
+.PHONY : main.i
 
 # target to preprocess a source file
-sim_cache.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/sim_cache.cpp.i
-.PHONY : sim_cache.cpp.i
+main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/main.cpp.i
+.PHONY : main.cpp.i
 
-sim_cache.s: sim_cache.cpp.s
-.PHONY : sim_cache.s
+main.s: main.cpp.s
+.PHONY : main.s
 
 # target to generate assembly for a file
-sim_cache.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/sim_cache.cpp.s
-.PHONY : sim_cache.cpp.s
+main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/main.cpp.s
+.PHONY : main.cpp.s
 
-simulator.o: simulator.cpp.o
-.PHONY : simulator.o
+mem_architecture_sim.o: mem_architecture_sim.cpp.o
+.PHONY : mem_architecture_sim.o
 
 # target to build an object file
-simulator.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/simulator.cpp.o
-.PHONY : simulator.cpp.o
+mem_architecture_sim.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o
+.PHONY : mem_architecture_sim.cpp.o
 
-simulator.i: simulator.cpp.i
-.PHONY : simulator.i
+mem_architecture_sim.i: mem_architecture_sim.cpp.i
+.PHONY : mem_architecture_sim.i
 
 # target to preprocess a source file
-simulator.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/simulator.cpp.i
-.PHONY : simulator.cpp.i
+mem_architecture_sim.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.i
+.PHONY : mem_architecture_sim.cpp.i
 
-simulator.s: simulator.cpp.s
-.PHONY : simulator.s
+mem_architecture_sim.s: mem_architecture_sim.cpp.s
+.PHONY : mem_architecture_sim.s
 
 # target to generate assembly for a file
-simulator.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/simulator.cpp.s
-.PHONY : simulator.cpp.s
+mem_architecture_sim.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.s
+.PHONY : mem_architecture_sim.cpp.s
 
 # Help Target
 help:
@@ -200,12 +200,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... mem_cache"
 	@echo "... sim_cache"
-	@echo "... sim_cache.o"
-	@echo "... sim_cache.i"
-	@echo "... sim_cache.s"
-	@echo "... simulator.o"
-	@echo "... simulator.i"
-	@echo "... simulator.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
+	@echo "... mem_architecture_sim.o"
+	@echo "... mem_architecture_sim.i"
+	@echo "... mem_architecture_sim.s"
 .PHONY : help
 
 

@@ -69,44 +69,44 @@ include CMakeFiles/sim_cache.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/sim_cache.dir/flags.make
 
-CMakeFiles/sim_cache.dir/sim_cache.cpp.o: CMakeFiles/sim_cache.dir/flags.make
-CMakeFiles/sim_cache.dir/sim_cache.cpp.o: ../sim_cache.cpp
-CMakeFiles/sim_cache.dir/sim_cache.cpp.o: CMakeFiles/sim_cache.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/sim_cache.dir/sim_cache.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sim_cache.dir/sim_cache.cpp.o -MF CMakeFiles/sim_cache.dir/sim_cache.cpp.o.d -o CMakeFiles/sim_cache.dir/sim_cache.cpp.o -c /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/sim_cache.cpp
+CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: CMakeFiles/sim_cache.dir/flags.make
+CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
+CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: CMakeFiles/sim_cache.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o -MF CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o.d -o CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o -c /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/mem_architecture_sim.cpp
 
-CMakeFiles/sim_cache.dir/sim_cache.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sim_cache.dir/sim_cache.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/sim_cache.cpp > CMakeFiles/sim_cache.dir/sim_cache.cpp.i
+CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/mem_architecture_sim.cpp > CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.i
 
-CMakeFiles/sim_cache.dir/sim_cache.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sim_cache.dir/sim_cache.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/sim_cache.cpp -o CMakeFiles/sim_cache.dir/sim_cache.cpp.s
+CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/mem_architecture_sim.cpp -o CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.s
 
-CMakeFiles/sim_cache.dir/simulator.cpp.o: CMakeFiles/sim_cache.dir/flags.make
-CMakeFiles/sim_cache.dir/simulator.cpp.o: ../simulator.cpp
-CMakeFiles/sim_cache.dir/simulator.cpp.o: CMakeFiles/sim_cache.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/sim_cache.dir/simulator.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sim_cache.dir/simulator.cpp.o -MF CMakeFiles/sim_cache.dir/simulator.cpp.o.d -o CMakeFiles/sim_cache.dir/simulator.cpp.o -c /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/simulator.cpp
+CMakeFiles/sim_cache.dir/main.cpp.o: CMakeFiles/sim_cache.dir/flags.make
+CMakeFiles/sim_cache.dir/main.cpp.o: ../main.cpp
+CMakeFiles/sim_cache.dir/main.cpp.o: CMakeFiles/sim_cache.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/sim_cache.dir/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sim_cache.dir/main.cpp.o -MF CMakeFiles/sim_cache.dir/main.cpp.o.d -o CMakeFiles/sim_cache.dir/main.cpp.o -c /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/main.cpp
 
-CMakeFiles/sim_cache.dir/simulator.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sim_cache.dir/simulator.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/simulator.cpp > CMakeFiles/sim_cache.dir/simulator.cpp.i
+CMakeFiles/sim_cache.dir/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sim_cache.dir/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/main.cpp > CMakeFiles/sim_cache.dir/main.cpp.i
 
-CMakeFiles/sim_cache.dir/simulator.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sim_cache.dir/simulator.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/simulator.cpp -o CMakeFiles/sim_cache.dir/simulator.cpp.s
+CMakeFiles/sim_cache.dir/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sim_cache.dir/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/main.cpp -o CMakeFiles/sim_cache.dir/main.cpp.s
 
 # Object files for target sim_cache
 sim_cache_OBJECTS = \
-"CMakeFiles/sim_cache.dir/sim_cache.cpp.o" \
-"CMakeFiles/sim_cache.dir/simulator.cpp.o"
+"CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o" \
+"CMakeFiles/sim_cache.dir/main.cpp.o"
 
 # External object files for target sim_cache
 sim_cache_EXTERNAL_OBJECTS =
 
-sim_cache: CMakeFiles/sim_cache.dir/sim_cache.cpp.o
-sim_cache: CMakeFiles/sim_cache.dir/simulator.cpp.o
+sim_cache: CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o
+sim_cache: CMakeFiles/sim_cache.dir/main.cpp.o
 sim_cache: CMakeFiles/sim_cache.dir/build.make
 sim_cache: mem_cache/libmem_cache.a
 sim_cache: CMakeFiles/sim_cache.dir/link.txt

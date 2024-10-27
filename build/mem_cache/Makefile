@@ -130,6 +130,30 @@ mem_cache/fast:
 	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/build
 .PHONY : mem_cache/fast
 
+src/address.o: src/address.cpp.o
+.PHONY : src/address.o
+
+# target to build an object file
+src/address.cpp.o:
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/src/address.cpp.o
+.PHONY : src/address.cpp.o
+
+src/address.i: src/address.cpp.i
+.PHONY : src/address.i
+
+# target to preprocess a source file
+src/address.cpp.i:
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/src/address.cpp.i
+.PHONY : src/address.cpp.i
+
+src/address.s: src/address.cpp.s
+.PHONY : src/address.s
+
+# target to generate assembly for a file
+src/address.cpp.s:
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/src/address.cpp.s
+.PHONY : src/address.cpp.s
+
 src/block.o: src/block.cpp.o
 .PHONY : src/block.o
 
@@ -235,6 +259,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... mem_cache"
+	@echo "... src/address.o"
+	@echo "... src/address.i"
+	@echo "... src/address.s"
 	@echo "... src/block.o"
 	@echo "... src/block.i"
 	@echo "... src/block.s"

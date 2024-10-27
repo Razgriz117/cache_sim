@@ -1,1 +1,1 @@
-/usr/bin/c++ CMakeFiles/sim_cache.dir/sim_cache.cpp.o CMakeFiles/sim_cache.dir/simulator.cpp.o -o sim_cache  mem_cache/libmem_cache.a 
+/usr/bin/c++ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o CMakeFiles/sim_cache.dir/main.cpp.o -o sim_cache  mem_cache/libmem_cache.a 
