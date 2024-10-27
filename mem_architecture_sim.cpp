@@ -30,13 +30,19 @@ MemArchitectureSim::MemArchitectureSim(unsigned int blocksize,
      inclusion_property = static_cast<InclusionProperty>(incl_property);
      replacement_policy = static_cast<ReplacementPolicy>(repl_policy);
 
-     numCaches = cache_sizes.size();
-     constructCaches();
      readInstructions();
      printInstructions();
+
+     numCaches = cache_sizes.size();
+     constructCaches();
 }
 
-Block MemArchitectureSim::write(const Address &addr)
+Block MemArchitectureSim::read(unsigned int addr)
+{
+     // Call cache read function
+}
+
+Block MemArchitectureSim::write(unsigned int address)
 {
      // Handle inclusion property.
      switch (inclusion_property)
@@ -49,19 +55,17 @@ Block MemArchitectureSim::write(const Address &addr)
      }
 }
 
-Block MemArchitectureSim::write_back(const Address &addr)
+Block MemArchitectureSim::write_back(unsigned int address)
 {
 }
 
-Block MemArchitectureSim::writeToCache(unsigned int cache_idx, const Address &addr)
+Block MemArchitectureSim::writeToCache(unsigned int cache_idx, unsigned int address)
 {
 
 }
 
 void MemArchitectureSim::constructCaches()
 {
-     // inclusion_property = static_cast<InclusionProperty>(inclusion_property);
-     // replacement_policy = static_cast<ReplacementPolicy>(replacement_policy);
 
      for (std::size_t i = 0; i < numCaches; i++)
      {
@@ -69,7 +73,8 @@ void MemArchitectureSim::constructCaches()
                Cache(
                     blocksize,
                     cache_sizes[i], cache_assocs[i],
-                    replacement_policy, inclusion_property
+                    replacement_policy, inclusion_property,
+                    instructions
                )
           );
      }
@@ -79,6 +84,19 @@ void MemArchitectureSim::addCache(const Cache &cache)
 {
      caches.push_back(cache);
 }
+
+void MemArchitectureSim::executeInstructions()
+{
+     for (auto instruction : instructions)
+     {
+          MemoryAccess operation = static_cast<MemoryAccess>(instruction.op);
+          switch (operation)
+          {
+               case MemoryAccess::Read: read(instruction.address); break;
+               case MemoryAccess::Write: write(instruction.address); break;
+          }
+     }
+}    
 
 void MemArchitectureSim::readInstructions()
 {
@@ -134,13 +152,13 @@ void MemArchitectureSim::readInstructions()
 
 void MemArchitectureSim::printInstructions()
 {
-     std::string instruction;
-     for (const auto &mem_access : instructions)
+     std::string instruction_str;
+     for (const auto &instruction : instructions)
      {
-          instruction = (mem_access.instruction == MemoryAccess::Write) ? "Write" : "Read";
+          instruction_str = (instruction.op == MemoryAccess::Write) ? "Write" : "Read";
 
           // Print the instruction and the address in hexadecimal
-          std::cout << "Instruction: " << instruction
-                    << ", Address: 0x" << std::hex << mem_access.address << std::endl;
+          std::cout << "Instruction: " << instruction_str
+                    << ", Address: 0x" << std::hex << instruction.address << std::endl;
      }
 }

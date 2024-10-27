@@ -21,8 +21,11 @@ public:
      void readInstructions();
      void printInstructions();
 
-     Block write(const Address &addr);
-     Block write_back(const Address &addr);
+     void executeInstructions();
+
+     Block read(unsigned int addr);
+     Block write(unsigned int address);
+     Block write_back(unsigned int address);
 
      // Getters
      unsigned int getBlocksize() const { return blocksize; }
@@ -32,7 +35,7 @@ public:
      std::string  getTraceFile() const { return trace_file; }
 
 private:
-     Block writeToCache(unsigned int cache_idx, const Address &addr);
+     Block writeToCache(unsigned int cache_idx, unsigned int address);
 
      unsigned int blocksize;
      ReplacementPolicy replacement_policy;

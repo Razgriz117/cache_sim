@@ -14,7 +14,7 @@ public:
      std::vector<Block> blocks;
      std::queue<unsigned int> FIFO_indices;
      std::vector<unsigned int> LRU_counters;
-     std::vector<Address> set_trace;
+     std::vector<Address> trace;
 
      bool isFull() const { return size == capacity; }
 

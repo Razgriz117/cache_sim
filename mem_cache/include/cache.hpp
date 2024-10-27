@@ -8,6 +8,7 @@
 #include "replacement_policy.hpp"
 #include "address.hpp"
 #include "block.hpp"
+#include "instruction.hpp"
 #include "set.hpp"
 
 class Cache
@@ -15,9 +16,11 @@ class Cache
 
 public:
      Cache(unsigned int blocksize, unsigned int size, unsigned int assoc,
-           ReplacementPolicy replacement_policy, InclusionProperty inclusion_property);
+           ReplacementPolicy replacement_policy, InclusionProperty inclusion_property,
+           std::vector<Instruction> &instructions);
 
-     Block write(const Address &addr);
+     Block read(unsigned int addr);
+     Block write(unsigned int addr);
 
      // Getters
      unsigned int getAssoc() const { return assoc; }
@@ -28,13 +31,16 @@ public:
      InclusionProperty getInclusionProperty() const { return inclusion_property; }
      const std::vector<Set> &getCache() const { return cache; }
 
-private : 
+private :
+     void construct_set_traces(std::vector<Instruction> &instructions);
+
      unsigned int assoc;
      unsigned int blocksize;
      unsigned int size;
      unsigned int numSets;
      ReplacementPolicy replacement_policy;
      InclusionProperty inclusion_property;
+     std::vector<Instruction> instructions;
      std::vector<Set> cache;
 };
 

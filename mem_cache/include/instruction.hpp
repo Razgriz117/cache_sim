@@ -4,9 +4,9 @@
 class Instruction
 {
 public:
-     Instruction(unsigned short instruction, unsigned int address);
+     Instruction(unsigned short op, unsigned int address);
 
-     unsigned short instruction;
+     unsigned short op;
      unsigned int address;
 };
 

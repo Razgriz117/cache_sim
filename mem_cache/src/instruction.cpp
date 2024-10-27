@@ -1,5 +1,5 @@
 #include "instruction.hpp"
 
 // Constructor implementation
-Instruction::Instruction(unsigned short instruction, unsigned int address)
-    : instruction(instruction), address(address) {}
+Instruction::Instruction(unsigned short op, unsigned int address)
+    : op(op), address(address) {}

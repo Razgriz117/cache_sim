@@ -139,10 +139,10 @@ unsigned int Set::get_optimal_replacement()
           unused_block_indices.push_back(i);
 
      unsigned int trace_address;
-     for (int i = 0; i < set_trace.size(); i++)
+     for (int i = 0; i < trace.size(); i++)
      {
           // Mark any blocks which match the current trace address as used.
-          trace_address = set_trace[i].value;
+          trace_address = trace[i].value;
           mark_used(trace_address, unused_block_indices);
 
           // If we've removed all but one block from our list of unused,

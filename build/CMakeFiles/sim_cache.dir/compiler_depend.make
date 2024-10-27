@@ -193,6 +193,7 @@ CMakeFiles/sim_cache.dir/main.cpp.o: ../main.cpp \
   ../enums/include/address.hpp \
   ../mem_cache/include/block.hpp \
   /usr/include/c++/11/cstddef \
+  ../mem_cache/include/instruction.hpp \
   ../mem_cache/include/set.hpp \
   /usr/include/c++/11/queue \
   /usr/include/c++/11/deque \
@@ -405,6 +406,7 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   ../enums/include/address.hpp \
   ../mem_cache/include/cache.hpp \
   ../mem_cache/include/block.hpp \
+  ../mem_cache/include/instruction.hpp \
   ../mem_cache/include/set.hpp \
   /usr/include/c++/11/queue \
   /usr/include/c++/11/deque \
