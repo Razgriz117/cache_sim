@@ -7,10 +7,12 @@
 
 // Local libraries
 #include "cache.hpp"
+#include "instruction.hpp"
 #include "mem_architecture_sim.hpp"
 
 // Global constants
 #define DECIMAL 10
+#define DIRECT_MAPPED 1
 
 // Convert string to unsigned int with error checking.
 unsigned int convertToUnsignedInt(const char *arg)
@@ -62,13 +64,30 @@ int main(int argc, char *argv[])
      std::vector<unsigned int> CACHE_SIZES = {L1_SIZE, L2_SIZE};
      std::vector<unsigned int> CACHE_ASSOCS = {L1_ASSOC, L2_ASSOC};
 
-     MemArchitectureSim simulator(
+     unsigned int main_memory_size = 0;
+     for (unsigned int cache_size : CACHE_SIZES)
+          main_memory_size += cache_size;
+
+     std::vector<Instruction> mem_instructions;
+     Cache main_memory = Cache(
+         "MAIN_MEMORY",
          BLOCKSIZE,
-         CACHE_SIZES,
-         CACHE_ASSOCS,
-         REPLACEMENT_POLICY,
-         INCLUSION_PROPERTY,
-         trace_file);
+         main_memory_size,
+         DIRECT_MAPPED,
+         static_cast<ReplacementPolicy>(REPLACEMENT_POLICY),
+         static_cast<InclusionProperty>(INCLUSION_PROPERTY),
+         mem_instructions
+     );
+
+     MemArchitectureSim simulator(
+          BLOCKSIZE,
+          CACHE_SIZES,
+          CACHE_ASSOCS,
+          REPLACEMENT_POLICY,
+          INCLUSION_PROPERTY,
+          trace_file,
+          main_memory
+     );
 
      return 0;
 }

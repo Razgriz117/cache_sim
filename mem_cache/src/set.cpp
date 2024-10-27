@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <optional>
 #include <vector>
 
 #include "inclusion_property.hpp"
@@ -11,6 +12,7 @@
 #define DIRECT_MAPPED 1
 #define ONLY_BLOCK 0
 #define FIRST_OF_REMAINING 0
+#define MISS std::nullopt
 
 Set::Set(unsigned int assoc, unsigned int blocksize, ReplacementPolicy replacement_policy)
     : assoc(assoc), blocksize(blocksize), replacement_policy(replacement_policy),
@@ -21,13 +23,23 @@ Set::Set(unsigned int assoc, unsigned int blocksize, ReplacementPolicy replaceme
 
      // Initialize first insertion position.
      open_block = 0;
+}
 
-     // replacement_policy = static_cast<ReplacementPolicy>(repl_policy);
+std::optional<Block> Set::read(const Address &addr)
+{
+     return search(addr);
 }
 
 Block Set::write(const Address &addr)
 {
-     // Determine victim block index.
+     // If the set is not yet full, fill an empty block.
+     if (!isFull())
+     {
+          fillBlock(addr);
+          return blocks.back();
+     }
+
+     // Otherwise, determine victim block index.
      unsigned int victim_idx;
      switch (replacement_policy)
      {
@@ -55,6 +67,18 @@ Block Set::write(const Address &addr)
      blocks[victim_idx].setDirty();
 
      return victim_block;
+}
+
+std::optional<Block> Set::search(const Address &addr)
+{
+     for (auto& block : blocks)
+     {
+          if (addr.tag == block.getAddress().tag)
+               return block;
+     }
+
+     // If we reach this line, 
+     return MISS;
 }
 
 void Set::fillBlock(const Address &addr)

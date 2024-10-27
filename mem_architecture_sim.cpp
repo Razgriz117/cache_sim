@@ -1,6 +1,7 @@
 // External libraries
 #include <iostream>
 #include <fstream>
+#include <optional>
 #include <sstream>
 #include <vector>
 
@@ -15,17 +16,22 @@
 #include "mem_architecture_sim.hpp"
 
 // Global constants
+#define DIRECT_MAPPED 1
 #define HEX 16
+#define MISS std::nullopt
+#define L1 0
 
 // Constructor for MemArchitectureSim
-MemArchitectureSim::MemArchitectureSim(unsigned int blocksize, 
-                     const std::vector<unsigned int> &cache_sizes,
-                     const std::vector<unsigned int> &cache_assocs, 
-                     unsigned int repl_policy, unsigned int incl_property, 
-                     const std::string &trace_file)
+MemArchitectureSim::MemArchitectureSim(unsigned int blocksize,
+                                       const std::vector<unsigned int> &cache_sizes,
+                                       const std::vector<unsigned int> &cache_assocs,
+                                       unsigned int repl_policy, unsigned int incl_property,
+                                       const std::string &trace_file, Cache &main_memory)
+
     : blocksize(blocksize), cache_sizes(cache_sizes), cache_assocs(cache_assocs),
-    replacement_policy(replacement_policy), inclusion_property(inclusion_property), 
-    trace_file(trace_file)
+      replacement_policy(replacement_policy), inclusion_property(inclusion_property),
+      trace_file(trace_file),
+      main_memory(main_memory)
 {
      inclusion_property = static_cast<InclusionProperty>(incl_property);
      replacement_policy = static_cast<ReplacementPolicy>(repl_policy);
@@ -37,13 +43,28 @@ MemArchitectureSim::MemArchitectureSim(unsigned int blocksize,
      constructCaches();
 }
 
-Block MemArchitectureSim::read(unsigned int addr)
+Block MemArchitectureSim::read(unsigned int address)
 {
-     // Call cache read function
+     auto hit = caches[L1].read(address);
+     if (hit) return *hit;
+
+     // Allocate to cache on miss.
+     caches[L1].write(address);
 }
 
 Block MemArchitectureSim::write(unsigned int address)
 {
+     // for (auto &cache : caches)
+     // {
+     //      auto hit = cache.search(address);
+     //      if (hit)
+     //      {
+     //           Block hit_block = *hit;
+     //           Cache hit_cache = cache;
+     //      }
+     // }
+
+
      // Handle inclusion property.
      switch (inclusion_property)
      {
@@ -64,13 +85,26 @@ Block MemArchitectureSim::writeToCache(unsigned int cache_idx, unsigned int addr
 
 }
 
+std::optional<Block> MemArchitectureSim::search(unsigned int address)
+{
+     for (auto& cache : caches)
+     {
+          auto hit = cache.search(address);
+          if (hit) return hit;
+     }
+
+     // If we reach this line, we missed in every cache.
+     return MISS;
+}
+
 void MemArchitectureSim::constructCaches()
 {
-
      for (std::size_t i = 0; i < numCaches; i++)
      {
+          std::string name = "L" + std::to_string(i + 1); // (i.g. "L1")
           caches.emplace_back(
                Cache(
+                    name,
                     blocksize,
                     cache_sizes[i], cache_assocs[i],
                     replacement_policy, inclusion_property,
@@ -78,6 +112,13 @@ void MemArchitectureSim::constructCaches()
                )
           );
      }
+
+     // Link each cache to next level of memory.
+     for (std::size_t i = 0; i < numCaches - 1; i++)
+          caches[i].next_mem_level = &caches[i + 1];
+
+     // Link final cache to main memory.
+     caches[numCaches - 1].next_mem_level = &main_memory;
 }
 
 void MemArchitectureSim::addCache(const Cache &cache)

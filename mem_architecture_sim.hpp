@@ -1,6 +1,8 @@
 #ifndef MEM_ARCHITECTURE_SIM_HPP
 #define MEM_ARCHITECTURE_SIM_HPP
 
+#include <memory>
+#include <optional>
 #include <vector>    // for std::vector
 #include <string>    // for std::string
 
@@ -14,7 +16,8 @@ public:
      // Constructor
      MemArchitectureSim(unsigned int blocksize, const std::vector<unsigned int> &cache_sizes,
                         const std::vector<unsigned int> &cache_assocs, unsigned int repl_policy,
-                        unsigned int incl_property, const std::string &trace_file);
+                        unsigned int incl_property, const std::string &trace_file,
+                        Cache &main_memory);
 
      void constructCaches();
      void addCache(const Cache &cache);
@@ -23,9 +26,11 @@ public:
 
      void executeInstructions();
 
-     Block read(unsigned int addr);
+     Block read(unsigned int address);
      Block write(unsigned int address);
      Block write_back(unsigned int address);
+
+     std::optional<Block> search(unsigned int addr);
 
      // Getters
      unsigned int getBlocksize() const { return blocksize; }
@@ -44,6 +49,7 @@ private:
      std::vector<Instruction> instructions;
      std::size_t numCaches;
      std::vector<Cache> caches;
+     Cache main_memory;
      const std::vector<unsigned int> &cache_assocs;
      const std::vector<unsigned int> &cache_sizes;
 };

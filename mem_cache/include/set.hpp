@@ -1,6 +1,7 @@
 #ifndef SET_HPP
 #define SET_HPP
 
+#include <optional>
 #include <vector>
 #include <queue>
 #include "address.hpp"
@@ -18,7 +19,10 @@ public:
 
      bool isFull() const { return size == capacity; }
 
+     std::optional<Block> read(const Address &addr);
      Block write(const Address &addr);
+     std::optional<Block> search(const Address &addr);
+
      void fillBlock(const Address &addr);
 
      // Replacement policy methods

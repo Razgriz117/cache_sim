@@ -188,6 +188,32 @@ CMakeFiles/sim_cache.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/bits/stl_bvector.h \
   /usr/include/c++/11/bits/vector.tcc \
   ../mem_cache/include/cache.hpp \
+  /usr/include/c++/11/memory \
+  /usr/include/c++/11/bits/stl_tempbuf.h \
+  /usr/include/c++/11/bits/stl_raw_storage_iter.h \
+  /usr/include/c++/11/bits/align.h \
+  /usr/include/c++/11/bit \
+  /usr/include/c++/11/bits/uses_allocator.h \
+  /usr/include/c++/11/bits/unique_ptr.h \
+  /usr/include/c++/11/utility \
+  /usr/include/c++/11/bits/stl_relops.h \
+  /usr/include/c++/11/tuple \
+  /usr/include/c++/11/array \
+  /usr/include/c++/11/bits/invoke.h \
+  /usr/include/c++/11/bits/shared_ptr.h \
+  /usr/include/c++/11/bits/shared_ptr_base.h \
+  /usr/include/c++/11/bits/allocated_ptr.h \
+  /usr/include/c++/11/bits/refwrap.h \
+  /usr/include/c++/11/ext/aligned_buffer.h \
+  /usr/include/c++/11/ext/concurrence.h \
+  /usr/include/c++/11/bits/shared_ptr_atomic.h \
+  /usr/include/c++/11/bits/atomic_base.h \
+  /usr/include/c++/11/bits/atomic_lockfree_defines.h \
+  /usr/include/c++/11/backward/auto_ptr.h \
+  /usr/include/c++/11/pstl/glue_memory_defs.h \
+  /usr/include/c++/11/pstl/execution_defs.h \
+  /usr/include/c++/11/optional \
+  /usr/include/c++/11/bits/enable_special_members.h \
   ../enums/include/inclusion_property.hpp \
   ../enums/include/replacement_policy.hpp \
   ../enums/include/address.hpp \
@@ -201,10 +227,9 @@ CMakeFiles/sim_cache.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/bits/deque.tcc \
   /usr/include/c++/11/bits/stl_heap.h \
   /usr/include/c++/11/bits/stl_queue.h \
-  /usr/include/c++/11/bits/uses_allocator.h \
+  ../mem_cache/include/instruction.hpp \
   ../mem_architecture_sim.hpp \
-  ../mem_cache/include/block.hpp \
-  ../mem_cache/include/instruction.hpp
+  ../mem_cache/include/block.hpp
 
 CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp \
   /usr/include/stdc-predef.h \
@@ -391,6 +416,10 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
   /usr/include/c++/11/bits/fstream.tcc \
+  /usr/include/c++/11/optional \
+  /usr/include/c++/11/utility \
+  /usr/include/c++/11/bits/stl_relops.h \
+  /usr/include/c++/11/bits/enable_special_members.h \
   /usr/include/c++/11/sstream \
   /usr/include/c++/11/bits/sstream.tcc \
   /usr/include/c++/11/vector \
@@ -405,6 +434,28 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   /usr/include/c++/11/cstddef \
   ../enums/include/address.hpp \
   ../mem_cache/include/cache.hpp \
+  /usr/include/c++/11/memory \
+  /usr/include/c++/11/bits/stl_tempbuf.h \
+  /usr/include/c++/11/bits/stl_raw_storage_iter.h \
+  /usr/include/c++/11/bits/align.h \
+  /usr/include/c++/11/bit \
+  /usr/include/c++/11/bits/uses_allocator.h \
+  /usr/include/c++/11/bits/unique_ptr.h \
+  /usr/include/c++/11/tuple \
+  /usr/include/c++/11/array \
+  /usr/include/c++/11/bits/invoke.h \
+  /usr/include/c++/11/bits/shared_ptr.h \
+  /usr/include/c++/11/bits/shared_ptr_base.h \
+  /usr/include/c++/11/bits/allocated_ptr.h \
+  /usr/include/c++/11/bits/refwrap.h \
+  /usr/include/c++/11/ext/aligned_buffer.h \
+  /usr/include/c++/11/ext/concurrence.h \
+  /usr/include/c++/11/bits/shared_ptr_atomic.h \
+  /usr/include/c++/11/bits/atomic_base.h \
+  /usr/include/c++/11/bits/atomic_lockfree_defines.h \
+  /usr/include/c++/11/backward/auto_ptr.h \
+  /usr/include/c++/11/pstl/glue_memory_defs.h \
+  /usr/include/c++/11/pstl/execution_defs.h \
   ../mem_cache/include/block.hpp \
   ../mem_cache/include/instruction.hpp \
   ../mem_cache/include/set.hpp \
@@ -414,7 +465,6 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   /usr/include/c++/11/bits/deque.tcc \
   /usr/include/c++/11/bits/stl_heap.h \
   /usr/include/c++/11/bits/stl_queue.h \
-  /usr/include/c++/11/bits/uses_allocator.h \
   ../mem_architecture_sim.hpp \
   ../mem_cache/include/instruction.hpp
 
@@ -431,8 +481,6 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 ../mem_architecture_sim.hpp:
 
-/usr/include/c++/11/bits/uses_allocator.h:
-
 /usr/include/c++/11/bits/stl_heap.h:
 
 /usr/include/c++/11/bits/stl_deque.h:
@@ -443,11 +491,33 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 ../enums/include/replacement_policy.hpp:
 
+/usr/include/c++/11/bits/enable_special_members.h:
+
+/usr/include/c++/11/bits/shared_ptr_atomic.h:
+
+/usr/include/c++/11/bits/refwrap.h:
+
+/usr/include/c++/11/array:
+
+/usr/include/c++/11/bits/stl_relops.h:
+
+/usr/include/c++/11/bits/uses_allocator.h:
+
+/usr/include/c++/11/bits/stl_raw_storage_iter.h:
+
+/usr/include/c++/11/memory:
+
+/usr/include/c++/11/optional:
+
 /usr/include/c++/11/bits/vector.tcc:
 
 /usr/include/c++/11/bits/stl_bvector.h:
 
+/usr/include/c++/11/backward/auto_ptr.h:
+
 /usr/include/c++/11/bits/stl_uninitialized.h:
+
+/usr/include/c++/11/bits/align.h:
 
 /usr/include/c++/11/vector:
 
@@ -472,6 +542,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 /usr/include/c++/11/bits/locale_facets.h:
 
 /usr/include/c++/11/bits/basic_ios.h:
+
+/usr/include/c++/11/bits/atomic_lockfree_defines.h:
 
 /usr/include/c++/11/bits/streambuf.tcc:
 
@@ -499,6 +571,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 /usr/include/x86_64-linux-gnu/bits/errno.h:
 
+/usr/include/c++/11/utility:
+
 /usr/include/errno.h:
 
 /usr/include/c++/11/cerrno:
@@ -515,7 +589,11 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 /usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
 
+/usr/include/c++/11/bits/shared_ptr.h:
+
 /usr/include/x86_64-linux-gnu/bits/byteswap.h:
+
+/usr/include/c++/11/ext/aligned_buffer.h:
 
 /usr/include/endian.h:
 
@@ -575,11 +653,15 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 /usr/include/c++/11/bits/range_access.h:
 
+/usr/include/c++/11/bit:
+
 /usr/include/c++/11/cstdlib:
 
 /usr/include/c++/11/bits/stl_iterator_base_types.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
+
+/usr/include/c++/11/bits/stl_tempbuf.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
@@ -605,6 +687,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
 
+/usr/include/c++/11/bits/unique_ptr.h:
+
 /usr/include/c++/11/ostream:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h:
@@ -616,6 +700,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
+
+/usr/include/c++/11/pstl/execution_defs.h:
 
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
@@ -636,6 +722,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 ../mem_cache/include/cache.hpp:
 
 /usr/include/features.h:
+
+/usr/include/c++/11/bits/atomic_base.h:
 
 /usr/include/c++/11/ext/numeric_traits.h:
 
@@ -658,6 +746,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 /usr/include/c++/11/pstl/pstl_config.h:
 
 /usr/include/c++/11/bits/alloc_traits.h:
+
+/usr/include/c++/11/pstl/glue_memory_defs.h:
 
 /usr/include/c++/11/ext/type_traits.h:
 
@@ -697,6 +787,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 ../mem_cache/include/instruction.hpp:
 
+/usr/include/c++/11/bits/invoke.h:
+
 /usr/include/x86_64-linux-gnu/bits/timex.h:
 
 /usr/include/c++/11/exception:
@@ -710,6 +802,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 /usr/include/x86_64-linux-gnu/bits/floatn.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h:
+
+/usr/include/c++/11/tuple:
 
 /usr/include/c++/11/type_traits:
 
@@ -777,6 +871,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 /usr/include/c++/11/bits/ios_base.h:
 
+/usr/include/c++/11/ext/concurrence.h:
+
 /usr/include/x86_64-linux-gnu/c++/11/bits/gthr-default.h:
 
 /usr/include/c++/11/bits/cpp_type_traits.h:
@@ -797,11 +893,15 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 /usr/include/x86_64-linux-gnu/bits/types/timer_t.h:
 
+/usr/include/c++/11/bits/allocated_ptr.h:
+
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
 
 /usr/include/c++/11/ext/new_allocator.h:
 
 /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
+
+/usr/include/c++/11/bits/shared_ptr_base.h:
 
 /usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
 

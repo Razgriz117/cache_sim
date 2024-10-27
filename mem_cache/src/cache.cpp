@@ -1,4 +1,5 @@
 #include <iostream>
+#include <optional>
 
 #include "address.hpp"
 #include "block.hpp"
@@ -6,13 +7,17 @@
 #include "instruction.hpp"
 #include "set.hpp"
 
+#define MISS std::nullopt
 
 // Constructor implementation
-Cache::Cache(unsigned int blocksize, unsigned int size, unsigned int assoc,
+Cache::Cache(const std::string &name, unsigned int blocksize, unsigned int size,
+             unsigned int assoc,
              ReplacementPolicy replacement_policy, InclusionProperty inclusion_property,
              std::vector<Instruction> &instructions)
-    : blocksize(blocksize), size(size), assoc(assoc),
-      replacement_policy(replacement_policy), inclusion_property(inclusion_property)
+
+    : name(name), blocksize(blocksize), size(size), assoc(assoc),
+      replacement_policy(replacement_policy), inclusion_property(inclusion_property),
+      numAccesses(0)
 {
      // Calculate number of sets.
      numSets = size / (blocksize * assoc);
@@ -28,14 +33,50 @@ Cache::Cache(unsigned int blocksize, unsigned int size, unsigned int assoc,
           construct_set_traces(instructions);
 }
 
-Block Cache::write(unsigned int addr)
+std::optional<Block> Cache::read(unsigned int addr)
 {
+     // Increment cache accesses.
+     access();
+
      // Decode address.
      auto address = Address(addr, blocksize, numSets);
+
+     // Read from the matching set.
+     Set &set = cache[address.setIndex];
+     auto result = set.read(address);
+
+     // If we miss, try the next cache.
+     if (result == MISS && next_mem_level != NULL)
+          next_mem_level->read(addr);
+          
+     return result;
+}
+
+    Block Cache::write(unsigned int addr)
+{
+     // Increment cache accesses.
+     access();
+
+     // Decode address.
+     auto address = Address(addr, blocksize, numSets);
+
+     // if (name == "MAIN_MEMORY")
+     //      return Block(blocksize, address);
 
      // Write to the set marked by the address's set index.
      Set &set = cache[address.setIndex];
      set.write(address);
+}
+
+std::optional<Block> Cache::search(unsigned int addr)
+{
+     // Decode address.
+     auto address = Address(addr, blocksize, numSets);
+
+     // Search for block in the specified set.
+     Set &set = cache[address.setIndex];
+
+     return set.search(address);
 }
 
 void Cache::construct_set_traces(std::vector<Instruction> &instructions)
