@@ -212,8 +212,20 @@ CMakeFiles/sim_cache.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/backward/auto_ptr.h \
   /usr/include/c++/11/pstl/glue_memory_defs.h \
   /usr/include/c++/11/pstl/execution_defs.h \
-  /usr/include/c++/11/optional \
+  /usr/include/c++/11/functional \
+  /usr/include/c++/11/bits/std_function.h \
+  /usr/include/c++/11/unordered_map \
+  /usr/include/c++/11/bits/hashtable.h \
+  /usr/include/c++/11/bits/hashtable_policy.h \
   /usr/include/c++/11/bits/enable_special_members.h \
+  /usr/include/c++/11/bits/node_handle.h \
+  /usr/include/c++/11/bits/unordered_map.h \
+  /usr/include/c++/11/bits/erase_if.h \
+  /usr/include/c++/11/bits/stl_algo.h \
+  /usr/include/c++/11/bits/algorithmfwd.h \
+  /usr/include/c++/11/bits/stl_heap.h \
+  /usr/include/c++/11/bits/uniform_int_dist.h \
+  /usr/include/c++/11/optional \
   ../enums/include/inclusion_property.hpp \
   ../enums/include/replacement_policy.hpp \
   ../enums/include/address.hpp \
@@ -225,7 +237,6 @@ CMakeFiles/sim_cache.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/deque \
   /usr/include/c++/11/bits/stl_deque.h \
   /usr/include/c++/11/bits/deque.tcc \
-  /usr/include/c++/11/bits/stl_heap.h \
   /usr/include/c++/11/bits/stl_queue.h \
   ../mem_cache/include/instruction.hpp \
   ../mem_architecture_sim.hpp \
@@ -420,13 +431,32 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   /usr/include/c++/11/utility \
   /usr/include/c++/11/bits/stl_relops.h \
   /usr/include/c++/11/bits/enable_special_members.h \
-  /usr/include/c++/11/sstream \
-  /usr/include/c++/11/bits/sstream.tcc \
+  /usr/include/c++/11/functional \
+  /usr/include/c++/11/tuple \
+  /usr/include/c++/11/array \
+  /usr/include/c++/11/bits/uses_allocator.h \
+  /usr/include/c++/11/bits/invoke.h \
+  /usr/include/c++/11/bits/refwrap.h \
+  /usr/include/c++/11/bits/std_function.h \
+  /usr/include/c++/11/unordered_map \
+  /usr/include/c++/11/ext/aligned_buffer.h \
+  /usr/include/c++/11/bits/hashtable.h \
+  /usr/include/c++/11/bits/hashtable_policy.h \
+  /usr/include/c++/11/bits/node_handle.h \
+  /usr/include/c++/11/bits/unordered_map.h \
+  /usr/include/c++/11/bits/erase_if.h \
   /usr/include/c++/11/vector \
   /usr/include/c++/11/bits/stl_uninitialized.h \
   /usr/include/c++/11/bits/stl_vector.h \
   /usr/include/c++/11/bits/stl_bvector.h \
   /usr/include/c++/11/bits/vector.tcc \
+  /usr/include/c++/11/bits/stl_algo.h \
+  /usr/include/c++/11/bits/algorithmfwd.h \
+  /usr/include/c++/11/bits/stl_heap.h \
+  /usr/include/c++/11/bits/stl_tempbuf.h \
+  /usr/include/c++/11/bits/uniform_int_dist.h \
+  /usr/include/c++/11/sstream \
+  /usr/include/c++/11/bits/sstream.tcc \
   ../enums/include/inclusion_property.hpp \
   ../enums/include/replacement_policy.hpp \
   ../enums/include/memory_access.hpp \
@@ -435,20 +465,13 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   ../enums/include/address.hpp \
   ../mem_cache/include/cache.hpp \
   /usr/include/c++/11/memory \
-  /usr/include/c++/11/bits/stl_tempbuf.h \
   /usr/include/c++/11/bits/stl_raw_storage_iter.h \
   /usr/include/c++/11/bits/align.h \
   /usr/include/c++/11/bit \
-  /usr/include/c++/11/bits/uses_allocator.h \
   /usr/include/c++/11/bits/unique_ptr.h \
-  /usr/include/c++/11/tuple \
-  /usr/include/c++/11/array \
-  /usr/include/c++/11/bits/invoke.h \
   /usr/include/c++/11/bits/shared_ptr.h \
   /usr/include/c++/11/bits/shared_ptr_base.h \
   /usr/include/c++/11/bits/allocated_ptr.h \
-  /usr/include/c++/11/bits/refwrap.h \
-  /usr/include/c++/11/ext/aligned_buffer.h \
   /usr/include/c++/11/ext/concurrence.h \
   /usr/include/c++/11/bits/shared_ptr_atomic.h \
   /usr/include/c++/11/bits/atomic_base.h \
@@ -463,7 +486,6 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   /usr/include/c++/11/deque \
   /usr/include/c++/11/bits/stl_deque.h \
   /usr/include/c++/11/bits/deque.tcc \
-  /usr/include/c++/11/bits/stl_heap.h \
   /usr/include/c++/11/bits/stl_queue.h \
   ../mem_architecture_sim.hpp \
   ../mem_cache/include/instruction.hpp
@@ -481,8 +503,6 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 ../mem_architecture_sim.hpp:
 
-/usr/include/c++/11/bits/stl_heap.h:
-
 /usr/include/c++/11/bits/stl_deque.h:
 
 ../mem_cache/include/set.hpp:
@@ -491,7 +511,19 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 ../enums/include/replacement_policy.hpp:
 
+/usr/include/c++/11/bits/stl_heap.h:
+
+/usr/include/c++/11/bits/algorithmfwd.h:
+
+/usr/include/c++/11/bits/stl_algo.h:
+
+/usr/include/c++/11/bits/erase_if.h:
+
 /usr/include/c++/11/bits/enable_special_members.h:
+
+/usr/include/c++/11/bits/hashtable_policy.h:
+
+/usr/include/c++/11/bits/hashtable.h:
 
 /usr/include/c++/11/bits/shared_ptr_atomic.h:
 
@@ -705,9 +737,13 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
+/usr/include/c++/11/bits/node_handle.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 
 /usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
+
+/usr/include/c++/11/functional:
 
 /usr/include/asm-generic/errno-base.h:
 
@@ -738,6 +774,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
 
 /usr/include/c++/11/ios:
+
+/usr/include/c++/11/bits/std_function.h:
 
 /usr/include/c++/11/bits/allocator.h:
 
@@ -813,6 +851,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 /usr/include/c++/11/string:
 
+/usr/include/c++/11/bits/uniform_int_dist.h:
+
 /usr/include/c++/11/bits/cxxabi_init_exception.h:
 
 /usr/include/wchar.h:
@@ -841,6 +881,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 
 /usr/include/x86_64-linux-gnu/bits/sched.h:
 
+/usr/include/c++/11/bits/unordered_map.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
 
 /usr/include/c++/11/bits/move.h:
@@ -852,6 +894,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 /usr/include/x86_64-linux-gnu/bits/types.h:
 
 /usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
+
+/usr/include/c++/11/unordered_map:
 
 /usr/include/c++/11/cctype:
 

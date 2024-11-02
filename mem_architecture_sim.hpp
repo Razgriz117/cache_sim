@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <optional>
+#include <functional>
 #include <vector>    // for std::vector
 #include <string>    // for std::string
 
@@ -23,14 +24,13 @@ public:
      void addCache(const Cache &cache);
      void readInstructions();
      void printInstructions();
-
      void executeInstructions();
 
-     Block read(unsigned int address);
+     Block& read(unsigned int address);
      Block write(unsigned int address);
      Block write_back(unsigned int address);
 
-     std::optional<Block> search(unsigned int addr);
+     std::optional<std::reference_wrapper<Block>> search(unsigned int addr);
 
      // Getters
      unsigned int getBlocksize() const { return blocksize; }

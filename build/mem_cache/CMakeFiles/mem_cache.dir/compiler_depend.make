@@ -481,6 +481,18 @@ mem_cache/CMakeFiles/mem_cache.dir/src/cache.cpp.o: ../mem_cache/src/cache.cpp \
   /usr/include/c++/11/backward/auto_ptr.h \
   /usr/include/c++/11/pstl/glue_memory_defs.h \
   /usr/include/c++/11/pstl/execution_defs.h \
+  /usr/include/c++/11/functional \
+  /usr/include/c++/11/bits/std_function.h \
+  /usr/include/c++/11/unordered_map \
+  /usr/include/c++/11/bits/hashtable.h \
+  /usr/include/c++/11/bits/hashtable_policy.h \
+  /usr/include/c++/11/bits/node_handle.h \
+  /usr/include/c++/11/bits/unordered_map.h \
+  /usr/include/c++/11/bits/erase_if.h \
+  /usr/include/c++/11/bits/stl_algo.h \
+  /usr/include/c++/11/bits/algorithmfwd.h \
+  /usr/include/c++/11/bits/stl_heap.h \
+  /usr/include/c++/11/bits/uniform_int_dist.h \
   ../enums/include/inclusion_property.hpp \
   ../enums/include/replacement_policy.hpp \
   ../mem_cache/include/block.hpp \
@@ -490,7 +502,6 @@ mem_cache/CMakeFiles/mem_cache.dir/src/cache.cpp.o: ../mem_cache/src/cache.cpp \
   /usr/include/c++/11/deque \
   /usr/include/c++/11/bits/stl_deque.h \
   /usr/include/c++/11/bits/deque.tcc \
-  /usr/include/c++/11/bits/stl_heap.h \
   /usr/include/c++/11/bits/stl_queue.h \
   ../mem_cache/include/instruction.hpp \
   ../mem_cache/include/set.hpp
@@ -615,17 +626,17 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
   /usr/include/c++/11/bits/stl_bvector.h \
   /usr/include/c++/11/bits/vector.tcc \
   /usr/include/c++/11/pstl/execution_defs.h \
+  /usr/include/c++/11/optional \
+  /usr/include/c++/11/exception \
+  /usr/include/c++/11/bits/exception_ptr.h \
+  /usr/include/c++/11/bits/cxxabi_init_exception.h \
+  /usr/include/c++/11/bits/nested_exception.h \
   ../enums/include/inclusion_property.hpp \
   ../enums/include/replacement_policy.hpp \
   ../enums/include/address.hpp \
   ../mem_cache/include/block.hpp \
   /usr/include/c++/11/cstddef \
   ../mem_cache/include/set.hpp \
-  /usr/include/c++/11/optional \
-  /usr/include/c++/11/exception \
-  /usr/include/c++/11/bits/exception_ptr.h \
-  /usr/include/c++/11/bits/cxxabi_init_exception.h \
-  /usr/include/c++/11/bits/nested_exception.h \
   /usr/include/c++/11/queue \
   /usr/include/c++/11/deque \
   /usr/include/c++/11/bits/stl_deque.h \
@@ -634,17 +645,17 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
   ../mem_cache/include/block.hpp
 
 
-/usr/include/c++/11/bits/unordered_map.h:
-
-/usr/include/c++/11/bits/hashtable_policy.h:
-
-/usr/include/c++/11/bits/hashtable.h:
-
-/usr/include/c++/11/unordered_map:
-
-/usr/include/c++/11/bits/stl_algo.h:
-
 /usr/include/c++/11/algorithm:
+
+../mem_cache/src/set.cpp:
+
+../mem_cache/src/instruction.cpp:
+
+/usr/include/c++/11/bits/deque.tcc:
+
+/usr/include/c++/11/deque:
+
+../mem_cache/include/instruction.hpp:
 
 /usr/include/x86_64-linux-gnu/sys/select.h:
 
@@ -653,6 +664,10 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 /usr/include/x86_64-linux-gnu/bits/types/wint_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/floatn-common.h:
+
+../enums/include/replacement_policy.hpp:
+
+/usr/include/wchar.h:
 
 /usr/include/c++/11/bits/cxxabi_init_exception.h:
 
@@ -756,6 +771,12 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 
 /usr/include/c++/11/tr1/riemann_zeta.tcc:
 
+../enums/include/inclusion_property.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/math-vector.h:
+
+/usr/include/c++/11/bits/stl_algo.h:
+
 /usr/include/c++/11/bits/predefined_ops.h:
 
 /usr/include/x86_64-linux-gnu/bits/typesizes.h:
@@ -778,6 +799,10 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 
 /usr/include/x86_64-linux-gnu/bits/endian.h:
 
+/usr/include/c++/11/bits/stl_deque.h:
+
+/usr/include/x86_64-linux-gnu/gnu/stubs.h:
+
 /usr/include/c++/11/bits/shared_ptr_base.h:
 
 /usr/include/c++/11/bits/basic_string.h:
@@ -793,10 +818,6 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 /usr/include/math.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
-
-/usr/include/c++/11/bits/std_function.h:
-
-/usr/include/c++/11/bits/stl_tempbuf.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/clock_t.h:
 
@@ -820,6 +841,10 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 
 /usr/include/c++/11/ext/numeric_traits.h:
 
+../mem_cache/include/set.hpp:
+
+/usr/include/c++/11/bits/atomic_base.h:
+
 /usr/include/features.h:
 
 /usr/include/c++/11/ext/atomicity.h:
@@ -835,6 +860,10 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 /usr/include/c++/11/type_traits:
 
 /usr/include/x86_64-linux-gnu/sys/single_threaded.h:
+
+/usr/include/c++/11/bits/stl_tempbuf.h:
+
+/usr/include/c++/11/bits/std_function.h:
 
 /usr/include/x86_64-linux-gnu/bits/types.h:
 
@@ -857,10 +886,6 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h:
 
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
-
-/usr/include/c++/11/bits/algorithmfwd.h:
-
-/usr/include/c++/11/pstl/execution_defs.h:
 
 /usr/include/stdlib.h:
 
@@ -910,8 +935,6 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 
 /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
 
-/usr/include/c++/11/deque:
-
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
 
 /usr/include/c++/11/string:
@@ -922,21 +945,11 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 
 /usr/include/x86_64-linux-gnu/bits/types/time_t.h:
 
-/usr/include/c++/11/bits/erase_if.h:
-
-/usr/include/c++/11/bits/ptr_traits.h:
-
-/usr/include/stdint.h:
-
-/usr/include/endian.h:
-
 /usr/include/x86_64-linux-gnu/sys/types.h:
 
 /usr/include/c++/11/ext/aligned_buffer.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/timer_t.h:
-
-../mem_cache/src/set.cpp:
 
 /usr/include/x86_64-linux-gnu/bits/time.h:
 
@@ -950,17 +963,15 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 
 /usr/include/c++/11/iostream:
 
-/usr/include/c++/11/bits/deque.tcc:
-
 /usr/include/x86_64-linux-gnu/sys/cdefs.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
 
 /usr/include/x86_64-linux-gnu/asm/errno.h:
 
-/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
-
 /usr/include/c++/11/bits/stl_queue.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
 
@@ -977,6 +988,8 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 /usr/include/x86_64-linux-gnu/bits/locale.h:
 
 /usr/include/c++/11/cctype:
+
+/usr/include/c++/11/unordered_map:
 
 /usr/include/ctype.h:
 
@@ -1006,6 +1019,8 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 
 /usr/include/x86_64-linux-gnu/bits/sched.h:
 
+/usr/include/c++/11/bits/unordered_map.h:
+
 /usr/include/x86_64-linux-gnu/bits/cpu-set.h:
 
 /usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
@@ -1013,8 +1028,6 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 /usr/include/x86_64-linux-gnu/bits/timex.h:
 
 /usr/include/c++/11/bits/invoke.h:
-
-../mem_cache/include/instruction.hpp:
 
 /usr/include/time.h:
 
@@ -1118,10 +1131,6 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 
 /usr/include/c++/11/cwctype:
 
-/usr/include/x86_64-linux-gnu/bits/math-vector.h:
-
-../enums/include/inclusion_property.hpp:
-
 /usr/include/c++/11/bits/streambuf_iterator.h:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/ctype_inline.h:
@@ -1156,20 +1165,22 @@ mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp \
 
 /usr/include/c++/11/bits/shared_ptr_atomic.h:
 
-/usr/include/wchar.h:
+/usr/include/c++/11/bits/hashtable.h:
 
-../enums/include/replacement_policy.hpp:
+/usr/include/c++/11/bits/hashtable_policy.h:
 
-/usr/include/c++/11/bits/atomic_base.h:
+/usr/include/c++/11/bits/ptr_traits.h:
 
-../mem_cache/include/set.hpp:
+/usr/include/stdint.h:
 
-/usr/include/x86_64-linux-gnu/gnu/stubs.h:
+/usr/include/endian.h:
 
-/usr/include/c++/11/bits/stl_deque.h:
+/usr/include/c++/11/bits/erase_if.h:
+
+/usr/include/c++/11/pstl/execution_defs.h:
+
+/usr/include/c++/11/bits/algorithmfwd.h:
 
 /usr/include/c++/11/bits/std_abs.h:
 
 /usr/include/c++/11/bits/stl_heap.h:
-
-../mem_cache/src/instruction.cpp:

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <optional>
+#include <functional>
 #include <sstream>
 #include <vector>
 
@@ -19,6 +20,7 @@
 #define DIRECT_MAPPED 1
 #define HEX 16
 #define MISS std::nullopt
+#define EMPTY_BLOCK std::nullopt
 #define L1 0
 
 // Constructor for MemArchitectureSim
@@ -37,17 +39,23 @@ MemArchitectureSim::MemArchitectureSim(unsigned int blocksize,
      replacement_policy = static_cast<ReplacementPolicy>(repl_policy);
 
      readInstructions();
-     printInstructions();
+     // printInstructions();
 
      numCaches = cache_sizes.size();
      constructCaches();
+
+     executeInstructions();
 }
 
-Block MemArchitectureSim::read(unsigned int address)
+Block& MemArchitectureSim::read(unsigned int address)
 {
      auto hit = caches[L1].read(address);
-     if (hit) return *hit;
-
+     if (hit)
+     {
+          Block& block = *hit;
+          return block;
+     }
+     
      // Allocate to cache on miss.
      caches[L1].write(address);
 }
@@ -64,16 +72,24 @@ Block MemArchitectureSim::write(unsigned int address)
      //      }
      // }
 
-
-     // Handle inclusion property.
-     switch (inclusion_property)
+     auto result = caches[L1].search(address);
+     if (result)
      {
-     case InclusionProperty::NonInclusive:
-          break;
-
-     case InclusionProperty::Inclusive:
-          break;
+          // Update data
+          Block& block = result->get();
+          // block.data = something
      }
+
+
+     // // Handle inclusion property.
+     // switch (inclusion_property)
+     // {
+     // case InclusionProperty::NonInclusive:
+     //      break;
+
+     // case InclusionProperty::Inclusive:
+     //      break;
+     // }
 }
 
 Block MemArchitectureSim::write_back(unsigned int address)
@@ -85,7 +101,7 @@ Block MemArchitectureSim::writeToCache(unsigned int cache_idx, unsigned int addr
 
 }
 
-std::optional<Block> MemArchitectureSim::search(unsigned int address)
+std::optional<std::reference_wrapper<Block>> MemArchitectureSim::search(unsigned int address)
 {
      for (auto& cache : caches)
      {
@@ -115,10 +131,14 @@ void MemArchitectureSim::constructCaches()
 
      // Link each cache to next level of memory.
      for (std::size_t i = 0; i < numCaches - 1; i++)
+     {
           caches[i].next_mem_level = &caches[i + 1];
+          caches[i + 1].prev_mem_level = &caches[i];
+     }
 
      // Link final cache to main memory.
      caches[numCaches - 1].next_mem_level = &main_memory;
+     main_memory.prev_mem_level = NULL;
 }
 
 void MemArchitectureSim::addCache(const Cache &cache)
@@ -131,13 +151,14 @@ void MemArchitectureSim::executeInstructions()
      for (auto instruction : instructions)
      {
           MemoryAccess operation = static_cast<MemoryAccess>(instruction.op);
+          unsigned int address = instruction.address;
           switch (operation)
           {
-               case MemoryAccess::Read: read(instruction.address); break;
-               case MemoryAccess::Write: write(instruction.address); break;
+               case MemoryAccess::Read: read(address); break;
+               case MemoryAccess::Write: write(address); break;
           }
      }
-}    
+}
 
 void MemArchitectureSim::readInstructions()
 {

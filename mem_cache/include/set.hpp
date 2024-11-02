@@ -19,11 +19,12 @@ public:
 
      bool isFull() const { return size == capacity; }
 
-     std::optional<Block> read(const Address &addr);
-     Block write(const Address &addr);
-     std::optional<Block> search(const Address &addr);
+     std::optional<std::reference_wrapper<Block>> read(const Address &addr);
+     std::optional<std::reference_wrapper<Block>> write(const Address &addr);
+     std::optional<std::reference_wrapper<Block>> search(const Address &addr);
 
      void fillBlock(const Address &addr);
+     void delete_block(const Address &addr);
 
      // Replacement policy methods
      Block replaceBlock_FIFO(const Address &addr);
@@ -42,6 +43,7 @@ private:
      unsigned int assoc;
      unsigned int blocksize;
      unsigned int open_block;
+     unsigned int trace_idx;
 };
 
 #endif // SET_HPP

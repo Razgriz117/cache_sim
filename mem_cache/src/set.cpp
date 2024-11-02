@@ -13,6 +13,7 @@
 #define ONLY_BLOCK 0
 #define FIRST_OF_REMAINING 0
 #define MISS std::nullopt
+#define EMPTY_BLOCK std::nullopt
 
 Set::Set(unsigned int assoc, unsigned int blocksize, ReplacementPolicy replacement_policy)
     : assoc(assoc), blocksize(blocksize), replacement_policy(replacement_policy),
@@ -23,20 +24,21 @@ Set::Set(unsigned int assoc, unsigned int blocksize, ReplacementPolicy replaceme
 
      // Initialize first insertion position.
      open_block = 0;
+     trace_idx = 0;
 }
 
-std::optional<Block> Set::read(const Address &addr)
+std::optional<std::reference_wrapper<Block>> Set::read(const Address &addr)
 {
      return search(addr);
 }
 
-Block Set::write(const Address &addr)
+std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
 {
      // If the set is not yet full, fill an empty block.
      if (!isFull())
      {
           fillBlock(addr);
-          return blocks.back();
+          return EMPTY_BLOCK;
      }
 
      // Otherwise, determine victim block index.
@@ -54,7 +56,7 @@ Block Set::write(const Address &addr)
      }
 
      // Get victim block.
-     Block victim_block = blocks[victim_idx];
+     Block& victim_block = blocks[victim_idx];
 
      // Replace victim block.
      Block block = Block(blocksize, addr);
@@ -69,7 +71,7 @@ Block Set::write(const Address &addr)
      return victim_block;
 }
 
-std::optional<Block> Set::search(const Address &addr)
+std::optional<std::reference_wrapper<Block>> Set::search(const Address &addr)
 {
      for (auto& block : blocks)
      {
@@ -81,14 +83,22 @@ std::optional<Block> Set::search(const Address &addr)
      return MISS;
 }
 
+void Set::delete_block(const Address &addr)
+{
+     auto result = search(addr);
+     if (result)
+     {
+          Block& block = result->get();
+          block.unsetDirty();
+          size--;
+     }
+}
+
 void Set::fillBlock(const Address &addr)
 {
      // Create new block.
      Block block = Block(blocksize, addr);
      block.setDirty();
-
-     // Place block in open block position.
-     blocks.push_back(block);
 
      // Add data.
      // { Get data arg. Do something }
@@ -98,8 +108,35 @@ void Set::fillBlock(const Address &addr)
      LRU_counters[open_block] = LRU;
      LRU++;
 
-     open_block++;
-     size++;
+     // If it's the first time filling the blocks array, push back.
+     if (blocks.size() <= size)
+     {
+          blocks.push_back(block);
+          size++;
+          open_block++;
+          return;
+     }
+     // Otherwise, insert block at the current open position and look for other open spot.
+     else
+     {
+          blocks[open_block] = block;
+          size++;
+
+          // If the set still has open spaces, find the first open space to place the next
+          // block.
+          if (isFull()) return;
+          else
+          {
+               for (int i = 0; i < assoc; i++)
+               {
+                    if (!blocks[i].isDirty())
+                    {
+                         open_block = i;
+                         return;
+                    }
+               }
+          }
+     }
 }
 
 Block Set::replaceBlock_FIFO(const Address &addr)
@@ -158,16 +195,19 @@ unsigned int Set::get_optimal_replacement()
      if (assoc == DIRECT_MAPPED)
           return ONLY_BLOCK;
 
+     // Create vector of yet to be used blocks' indices.
      std::vector<unsigned int> unused_block_indices;
      for (int i = 0; i < assoc; i++)
           unused_block_indices.push_back(i);
 
+     // Track usage of blocks in set trace until one block in set is unused.
      unsigned int trace_address;
-     for (int i = 0; i < trace.size(); i++)
+     while (trace_idx < trace.size())
      {
           // Mark any blocks which match the current trace address as used.
-          trace_address = trace[i].value;
+          trace_address = trace[trace_idx].value;
           mark_used(trace_address, unused_block_indices);
+          trace_idx++;
 
           // If we've removed all but one block from our list of unused,
           // the only block left is either last to be reused or never used at all.

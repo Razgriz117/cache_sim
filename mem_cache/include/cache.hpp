@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <functional>
 #include <optional>
 #include <vector>
 
@@ -22,10 +23,11 @@ public:
            ReplacementPolicy replacement_policy, InclusionProperty inclusion_property,
            std::vector<Instruction> &instructions);
 
-     std::optional<Block> read(unsigned int addr);
-     Block write(unsigned int addr);
+     std::optional<std::reference_wrapper<Block>> read(unsigned int addr);
+     std::optional<std::reference_wrapper<Block>> write(unsigned int addr);
 
-     std::optional<Block> search(unsigned int addr);
+     std::optional<std::reference_wrapper<Block>> search(unsigned int addr);
+     void delete_block(unsigned int addr);
 
      // Setters
      void access() { numAccesses++; }
@@ -40,6 +42,7 @@ public:
      InclusionProperty getInclusionProperty() const { return inclusion_property; }
      const std::vector<Set> &getCache() const { return cache; }
 
+     Cache *prev_mem_level = NULL;
      Cache *next_mem_level = NULL;
      const std::string &name;
 
