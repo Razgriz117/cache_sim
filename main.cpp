@@ -1,9 +1,14 @@
 // Standard libraries
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <cstdlib>
 #include <limits>
 #include <vector>
+
+// Enums
+#include "replacement_policy.hpp"
+#include "inclusion_property.hpp"
 
 // Local libraries
 #include "cache.hpp"
@@ -13,6 +18,7 @@
 // Global constants
 #define DECIMAL 10
 #define DIRECT_MAPPED 1
+#define FORMAT_SPACE 23
 
 // Convert string to unsigned int with error checking.
 unsigned int convertToUnsignedInt(const char *arg)
@@ -27,6 +33,15 @@ unsigned int convertToUnsignedInt(const char *arg)
           exit(1);
      }
      return static_cast<unsigned int>(val);
+}
+
+void out(std::string var, std::string val)
+{
+     using std::cout;
+     using std::endl;
+     using std::left;
+     using std::setw;
+     cout << left << setw(FORMAT_SPACE) << var << val << endl;
 }
 
 int main(int argc, char *argv[])
@@ -50,25 +65,41 @@ int main(int argc, char *argv[])
      unsigned int INCLUSION_PROPERTY = convertToUnsignedInt(argv[7]);
      std::string trace_file = argv[8];
 
-     // Display parsed values
-     std::cout << "Parsed Values:" << std::endl;
-     std::cout << "BLOCKSIZE: " << BLOCKSIZE << std::endl;
-     std::cout << "L1_SIZE: " << L1_SIZE << std::endl;
-     std::cout << "L1_ASSOC: " << L1_ASSOC << std::endl;
-     std::cout << "L2_SIZE: " << L2_SIZE << std::endl;
-     std::cout << "L2_ASSOC: " << L2_ASSOC << std::endl;
-     std::cout << "REPLACEMENT_POLICY: " << REPLACEMENT_POLICY << std::endl;
-     std::cout << "INCLUSION_PROPERTY: " << INCLUSION_PROPERTY << std::endl;
-     std::cout << "Trace File: " << trace_file << std::endl;
+     // Decode input.
+     ReplacementPolicy policy = static_cast<ReplacementPolicy>(REPLACEMENT_POLICY);
+     InclusionProperty property = static_cast<InclusionProperty>(INCLUSION_PROPERTY);
+     std::string replacement_policy;
+     std::string inclusion_property;
+     switch (policy)
+     {
+          case ReplacementPolicy::LRU: replacement_policy = "LRU"; break;
+          case ReplacementPolicy::FIFO: replacement_policy = "FIFO"; break;
+          case ReplacementPolicy::Optimal: replacement_policy = "Optimal"; break;
+     }
+     switch (property)
+     {
+          case InclusionProperty::NonInclusive: inclusion_property = "non-inclusive"; break;
+          case InclusionProperty::Inclusive: inclusion_property = "inclusive"; break;
+     }
+
+     // Display input parameters.
+     std::cout << "===== Simulator configuration =====" << std::endl;
+     out("BLOCKSIZE:", std::to_string(BLOCKSIZE));
+     out("L1_SIZE:", std::to_string(L1_SIZE));
+     out("L1_ASSOC:", std::to_string(L1_ASSOC));
+     out("L2_SIZE:", std::to_string(L2_SIZE));
+     out("L2_ASSOC:", std::to_string(L2_ASSOC));
+     out("REPLACEMENT_POLICY:", replacement_policy);
+     out("INCLUSION_PROPERTY:", inclusion_property);
+     out("trace_file:", trace_file);
 
      std::vector<unsigned int> CACHE_SIZES = {L1_SIZE, L2_SIZE};
      std::vector<unsigned int> CACHE_ASSOCS = {L1_ASSOC, L2_ASSOC};
 
+     // Create main memory.
      unsigned int main_memory_size = 0;
-     for (unsigned int cache_size : CACHE_SIZES)
-          main_memory_size += cache_size;
-
      std::vector<Instruction> mem_instructions;
+     for (unsigned int cache_size : CACHE_SIZES) main_memory_size += cache_size;
      Cache main_memory = Cache(
          "MAIN_MEMORY",
          BLOCKSIZE,
@@ -79,6 +110,7 @@ int main(int argc, char *argv[])
          mem_instructions
      );
 
+     // Construct cache simulator.
      MemArchitectureSim simulator(
           BLOCKSIZE,
           CACHE_SIZES,

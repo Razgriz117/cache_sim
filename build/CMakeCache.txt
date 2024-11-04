@@ -219,6 +219,9 @@ EXECUTABLE_OUTPUT_PATH:PATH=
 //Single output directory for building all libraries.
 LIBRARY_OUTPUT_PATH:PATH=
 
+//The directory containing a CMake configuration file for fmt.
+fmt_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/fmt
+
 //Value Computed by CMake
 mem_architecture_sim_BINARY_DIR:STATIC=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build
 

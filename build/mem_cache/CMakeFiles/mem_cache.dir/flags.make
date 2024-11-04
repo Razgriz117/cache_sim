@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/mem_cache/include -I/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/enums/include
 
-CXX_FLAGS = 
+CXX_FLAGS = -std=gnu++20
 

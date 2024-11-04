@@ -21,7 +21,9 @@ public:
 
      std::optional<std::reference_wrapper<Block>> read(const Address &addr);
      std::optional<std::reference_wrapper<Block>> write(const Address &addr);
+     std::optional<std::reference_wrapper<Block>> write(const Block &block);
      std::optional<std::reference_wrapper<Block>> search(const Address &addr);
+     unsigned int getIdx(const Address &addr);
 
      void fillBlock(const Address &addr);
      void delete_block(const Address &addr);
@@ -31,11 +33,18 @@ public:
      unsigned int get_FIFO_replacement();
 
      unsigned int get_LRU_replacement();
+     void update_LRU(unsigned int idx);
+
      unsigned int get_optimal_replacement();
 
      void mark_used(unsigned int address, std::vector<unsigned int> &indices);
 
+     void print_contents();
+
 private:
+     void leftOut(std::string input);
+     void outRight(std::string input);
+
      ReplacementPolicy replacement_policy;
      unsigned int LRU;
      unsigned int size;

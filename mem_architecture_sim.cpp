@@ -23,6 +23,8 @@
 #define EMPTY_BLOCK std::nullopt
 #define L1 0
 
+#define VERBOSE true
+
 // Constructor for MemArchitectureSim
 MemArchitectureSim::MemArchitectureSim(unsigned int blocksize,
                                        const std::vector<unsigned int> &cache_sizes,
@@ -32,8 +34,7 @@ MemArchitectureSim::MemArchitectureSim(unsigned int blocksize,
 
     : blocksize(blocksize), cache_sizes(cache_sizes), cache_assocs(cache_assocs),
       replacement_policy(replacement_policy), inclusion_property(inclusion_property),
-      trace_file(trace_file),
-      main_memory(main_memory)
+      trace_file(trace_file), main_memory(main_memory), memory_traffic(0)
 {
      inclusion_property = static_cast<InclusionProperty>(incl_property);
      replacement_policy = static_cast<ReplacementPolicy>(repl_policy);
@@ -45,11 +46,17 @@ MemArchitectureSim::MemArchitectureSim(unsigned int blocksize,
      constructCaches();
 
      executeInstructions();
+
+     calculate_miss_rates();
+     memory_traffic = main_memory.reads + main_memory.writes;
+
+     print_contents();
 }
 
 Block& MemArchitectureSim::read(unsigned int address)
 {
      auto hit = caches[L1].read(address);
+
      if (hit)
      {
           Block& block = *hit;
@@ -72,14 +79,18 @@ Block MemArchitectureSim::write(unsigned int address)
      //      }
      // }
 
-     auto result = caches[L1].search(address);
-     if (result)
-     {
-          // Update data
-          Block& block = result->get();
-          // block.data = something
-     }
+     // if (VERBOSE) std::cout << "    Writing " << std::hex << address << std::endl;
+     // if (VERBOSE) std::cout << "    Searching for " << std::hex << address << "...";
 
+     // auto result = caches[L1].search(address);
+     // if (result)
+     // {
+     //      // Update data
+     //      Block& block = result->get();
+     //      // block.data = something
+     // }
+
+     caches[L1].write(address);
 
      // // Handle inclusion property.
      // switch (inclusion_property)
@@ -115,30 +126,48 @@ std::optional<std::reference_wrapper<Block>> MemArchitectureSim::search(unsigned
 
 void MemArchitectureSim::constructCaches()
 {
+     numNonEmptyCaches = 0;
+     if (VERBOSE) std::cout << "Constructing caches:" << std::endl;
      for (std::size_t i = 0; i < numCaches; i++)
      {
           std::string name = "L" + std::to_string(i + 1); // (i.g. "L1")
-          caches.emplace_back(
-               Cache(
-                    name,
-                    blocksize,
-                    cache_sizes[i], cache_assocs[i],
-                    replacement_policy, inclusion_property,
-                    instructions
-               )
-          );
+          if (VERBOSE) std::cout << "  Adding " << name << " cache to list..." << std::endl;
+          if (cache_sizes[i] > 0)
+          {
+               numNonEmptyCaches++;
+               caches.emplace_back(
+                   Cache(
+                       name,
+                       blocksize,
+                       cache_sizes[i], cache_assocs[i],
+                       replacement_policy, inclusion_property,
+                       instructions
+                    )
+               );
+          }
      }
+
+     if (VERBOSE) std::cout << "Linking caches:" << std::endl;
 
      // Link each cache to next level of memory.
-     for (std::size_t i = 0; i < numCaches - 1; i++)
+     for (std::size_t i = 0; i < numNonEmptyCaches - 1; i++)
      {
+          std::string name = "L" + std::to_string(i + 1); // (i.g. "L1")
+          if (VERBOSE) std::cout << "  Linking " << name << " to next cache...";
           caches[i].next_mem_level = &caches[i + 1];
           caches[i + 1].prev_mem_level = &caches[i];
+          if (VERBOSE) std::cout << " Done!" << std::endl;
      }
 
+     if (VERBOSE)
+          std::cout << "  Linking " << "L" << std::to_string(numNonEmptyCaches) << " to MAIN_MEMORY.";
+
      // Link final cache to main memory.
-     caches[numCaches - 1].next_mem_level = &main_memory;
+     caches[numNonEmptyCaches - 1].next_mem_level = &main_memory;
      main_memory.prev_mem_level = NULL;
+     numCaches = numNonEmptyCaches;
+
+     if (VERBOSE) std::cout << "  Done!" << std::endl;
 }
 
 void MemArchitectureSim::addCache(const Cache &cache)
@@ -146,15 +175,23 @@ void MemArchitectureSim::addCache(const Cache &cache)
      caches.push_back(cache);
 }
 
+void MemArchitectureSim::calculate_miss_rates()
+{
+     for (auto& cache : caches)
+          cache.calculate_miss_rate();
+}
+
 void MemArchitectureSim::executeInstructions()
 {
+     // if (VERBOSE) std::cout << "Executing instructions:" << std::endl;
      for (auto instruction : instructions)
      {
+          // if (VERBOSE) std::cout << "  " << instruction.to_string() << std::endl;
           MemoryAccess operation = static_cast<MemoryAccess>(instruction.op);
           unsigned int address = instruction.address;
           switch (operation)
           {
-               case MemoryAccess::Read: read(address); break;
+               case MemoryAccess::Read:  read(address);  break;
                case MemoryAccess::Write: write(address); break;
           }
      }
@@ -222,5 +259,14 @@ void MemArchitectureSim::printInstructions()
           // Print the instruction and the address in hexadecimal
           std::cout << "Instruction: " << instruction_str
                     << ", Address: 0x" << std::hex << instruction.address << std::endl;
+     }
+}
+
+void MemArchitectureSim::print_contents()
+{
+     for (int i = 0; i < numCaches; i++)
+     {
+          std::cout << "===== L" << std::to_string(i+1) << " contents =====" << std::endl;
+          caches[i].print_contents();
      }
 }

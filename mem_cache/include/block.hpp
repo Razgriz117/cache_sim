@@ -27,16 +27,19 @@ public:
      unsigned char readByte(std::size_t index) const;
 
      bool isDirty() { return dirtyBit == true; }
+     bool isAvailable() { return empty == true; }
 
      // Setters
      void setDirty() { dirtyBit = true; }
      void unsetDirty() { dirtyBit = false; }
+     void clear() { empty = true; }
 
      // Getters
      std::size_t getBlockSize() const { return blocksize; }
-     Address getAddress() const { return address; }
+     const Address &getAddress() const { return address; }
 
 private:
+     bool empty;
      std::size_t blocksize; // Size of the block in bytes
      const Address &address;
      unsigned char *data; // Pointer to the data array (each cell stores a byte)

@@ -1,6 +1,9 @@
 #include <algorithm>
+#include <iostream>
+#include <iomanip>
 #include <optional>
 #include <vector>
+#include <climits>
 
 #include "inclusion_property.hpp"
 #include "replacement_policy.hpp"
@@ -8,12 +11,15 @@
 #include "address.hpp"
 #include "block.hpp"
 #include "set.hpp"
+#include "output.hpp"
 
 #define DIRECT_MAPPED 1
 #define ONLY_BLOCK 0
 #define FIRST_OF_REMAINING 0
 #define MISS std::nullopt
 #define EMPTY_BLOCK std::nullopt
+#define HIT std::nullopt
+#define NOT_FOUND UINT_MAX
 
 Set::Set(unsigned int assoc, unsigned int blocksize, ReplacementPolicy replacement_policy)
     : assoc(assoc), blocksize(blocksize), replacement_policy(replacement_policy),
@@ -32,6 +38,68 @@ std::optional<std::reference_wrapper<Block>> Set::read(const Address &addr)
      return search(addr);
 }
 
+std::optional<std::reference_wrapper<Block>> Set::write(const Block &block)
+{
+     auto& addr = block.getAddress();
+     write(addr);
+
+     // // If the set is not yet full, fill an empty block.
+     // if (!isFull())
+     // {
+     //      fillBlock(addr);
+     //      return EMPTY_BLOCK;
+     // }
+
+     // auto hit = search(addr);
+     // if (hit)
+     // {
+     //      // Add data.
+     //      // { Get data arg. Do something. Need tag. }
+
+     //      Block &block = hit->get();
+     //      block.setDirty();
+
+     //      // Update replacement policy.
+     //      if (replacement_policy == ReplacementPolicy::LRU)
+     //      {
+     //           unsigned int idx = getIdx(addr);
+     //           update_LRU(idx);
+     //           // LRU_counters[idx] = LRU;
+     //           // LRU++;
+     //      }
+     //      return HIT;
+     // }
+
+     // // Otherwise, determine victim block index.
+     // unsigned int victim_idx;
+     // switch (replacement_policy)
+     // {
+     // case ReplacementPolicy::LRU:
+     //      victim_idx = get_LRU_replacement();
+     //      break;
+
+     // case ReplacementPolicy::FIFO:
+     //      victim_idx = get_FIFO_replacement();
+     //      break;
+
+     // case ReplacementPolicy::Optimal:
+     //      victim_idx = get_optimal_replacement();
+     //      break;
+     // }
+
+     // // Get victim block.
+     // Block &victim_block = blocks[victim_idx];
+
+     // // Replace victim block.
+     // Block block = Block(blocksize, addr);
+     // blocks[victim_idx] = block;
+
+     // // Add data.
+     // // { Get data arg. Do something. Need tag. }
+
+     // return victim_block;
+}
+
 std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
 {
      // If the set is not yet full, fill an empty block.
@@ -39,6 +107,26 @@ std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
      {
           fillBlock(addr);
           return EMPTY_BLOCK;
+     }
+
+     auto hit = search(addr);
+     if (hit)
+     {
+          // Add data.
+          // { Get data arg. Do something. Need tag. }
+
+          Block& block = hit->get();
+          block.setDirty();
+
+          // Update replacement policy.
+          if (replacement_policy == ReplacementPolicy::LRU)
+          {
+               unsigned int idx = getIdx(addr);
+               update_LRU(idx);
+               // LRU_counters[idx] = LRU;
+               // LRU++;
+          }
+          return HIT;
      }
 
      // Otherwise, determine victim block index.
@@ -65,9 +153,6 @@ std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
      // Add data.
      // { Get data arg. Do something. Need tag. }
 
-     // Mark block as dirty.
-     blocks[victim_idx].setDirty();
-
      return victim_block;
 }
 
@@ -79,8 +164,18 @@ std::optional<std::reference_wrapper<Block>> Set::search(const Address &addr)
                return block;
      }
 
-     // If we reach this line, 
      return MISS;
+}
+
+unsigned int Set::getIdx(const Address &addr)
+{
+     for (int i = 0; i < assoc; i++)
+     {
+          if (addr.tag == blocks[i].getAddress().tag)
+               return i;
+     }
+
+     return NOT_FOUND;
 }
 
 void Set::delete_block(const Address &addr)
@@ -90,6 +185,7 @@ void Set::delete_block(const Address &addr)
      {
           Block& block = result->get();
           block.unsetDirty();
+          block.clear();
           size--;
      }
 }
@@ -98,15 +194,15 @@ void Set::fillBlock(const Address &addr)
 {
      // Create new block.
      Block block = Block(blocksize, addr);
-     block.setDirty();
 
      // Add data.
      // { Get data arg. Do something }
 
      // Update replacement policy.
      FIFO_indices.push(open_block);
-     LRU_counters[open_block] = LRU;
-     LRU++;
+     update_LRU(open_block);
+     // LRU_counters[open_block] = LRU;
+     // LRU++;
 
      // If it's the first time filling the blocks array, push back.
      if (blocks.size() <= size)
@@ -129,7 +225,7 @@ void Set::fillBlock(const Address &addr)
           {
                for (int i = 0; i < assoc; i++)
                {
-                    if (!blocks[i].isDirty())
+                    if (!blocks[i].isAvailable())
                     {
                          open_block = i;
                          return;
@@ -171,10 +267,17 @@ unsigned int Set::get_LRU_replacement()
      unsigned int victim_idx = std::distance(LRU_counters.begin(), minIt);
 
      // Update most recently used.
-     LRU_counters[victim_idx] = LRU;
-     LRU++;
+     update_LRU(victim_idx);
+     // LRU_counters[victim_idx] = LRU;
+     // LRU++;
 
      return victim_idx;
+}
+
+void Set::update_LRU(unsigned int idx)
+{
+     LRU_counters[idx] = LRU;
+     LRU++;
 }
 
 unsigned int Set::get_FIFO_replacement()
@@ -239,3 +342,24 @@ void Set::mark_used(unsigned int address, std::vector<unsigned int> &indices)
           }
      }
 }
+
+void Set::print_contents()
+{
+     for (auto& block : blocks) 
+     {
+          // Get tag as hexidecimal string.
+          std::stringstream stream;
+          stream << std::hex << block.getAddress().tag;
+          std::string tag(stream.str());
+
+          // Construct dirty bit string.
+          std::string dirty_bit{};
+          if (block.isDirty()) dirty_bit = " D";
+
+          // Output <tag> [D| ]
+          std::string contents = tag + dirty_bit;
+          Output::outRight(contents);
+     }
+     std::cout << std::endl;
+}
+

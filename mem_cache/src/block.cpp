@@ -4,14 +4,14 @@
 #include "block.hpp"
 
 Block::Block(std::size_t blocksize, const Address &addr)
-    : blocksize(blocksize), data(new unsigned char[blocksize]), address(addr)
+    : blocksize(blocksize), data(new unsigned char[blocksize]), address(addr), empty(false)
 {
      // Initialize the data array to zero
      // std::memset(data, 0, blocksize); FIX CONSTRUCTOR
 }
 
 Block::Block(std::size_t blocksize, const Address &addr, const unsigned char *inputData)
-    : blocksize(blocksize), data(new unsigned char[blocksize]), address(addr)
+    : blocksize(blocksize), data(new unsigned char[blocksize]), address(addr), empty(false)
 {
      
      std::memcpy(data, inputData, blocksize);

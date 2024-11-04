@@ -18,19 +18,20 @@ class Cache
 {
 
 public:
-     Cache(const std::string &name, unsigned int blocksize, unsigned int size, 
+     Cache(const std::string name, unsigned int blocksize, unsigned int size, 
            unsigned int assoc,
            ReplacementPolicy replacement_policy, InclusionProperty inclusion_property,
            std::vector<Instruction> &instructions);
 
      std::optional<std::reference_wrapper<Block>> read(unsigned int addr);
      std::optional<std::reference_wrapper<Block>> write(unsigned int addr);
-
      std::optional<std::reference_wrapper<Block>> search(unsigned int addr);
+     std::optional<std::reference_wrapper<Block>> load(unsigned int addr);
      void delete_block(unsigned int addr);
 
      // Setters
      void access() { numAccesses++; }
+     double calculate_miss_rate();
 
      // Getters
      unsigned int getAssoc() const { return assoc; }
@@ -42,9 +43,18 @@ public:
      InclusionProperty getInclusionProperty() const { return inclusion_property; }
      const std::vector<Set> &getCache() const { return cache; }
 
+     void print_contents();
+
      Cache *prev_mem_level = NULL;
      Cache *next_mem_level = NULL;
-     const std::string &name;
+     const std::string name;
+
+     unsigned int reads;
+     unsigned int read_misses;
+     unsigned int writes;
+     unsigned int write_misses;
+     double miss_rate;
+     unsigned int write_backs;
 
 private :
      void construct_set_traces(std::vector<Instruction> &instructions);

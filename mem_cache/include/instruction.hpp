@@ -8,6 +8,8 @@ public:
 
      unsigned short op;
      unsigned int address;
+
+     std::string to_string() const;
 };
 
 #endif // INSTRUCTION_HPP

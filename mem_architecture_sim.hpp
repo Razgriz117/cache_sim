@@ -39,8 +39,11 @@ public:
      InclusionProperty getInclusionProperty() const { return inclusion_property; }
      std::string  getTraceFile() const { return trace_file; }
 
+     void print_contents();
+
 private:
      Block writeToCache(unsigned int cache_idx, unsigned int address);
+     void calculate_miss_rates();
 
      unsigned int blocksize;
      ReplacementPolicy replacement_policy;
@@ -48,8 +51,10 @@ private:
      std::string trace_file;
      std::vector<Instruction> instructions;
      std::size_t numCaches;
+     std::size_t numNonEmptyCaches;
      std::vector<Cache> caches;
      Cache main_memory;
+     unsigned int memory_traffic;
      const std::vector<unsigned int> &cache_assocs;
      const std::vector<unsigned int> &cache_sizes;
 };
