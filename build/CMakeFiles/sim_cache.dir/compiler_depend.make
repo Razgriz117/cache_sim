@@ -278,6 +278,7 @@ CMakeFiles/sim_cache.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/bits/unordered_map.h \
   /usr/include/c++/11/bits/erase_if.h \
   /usr/include/c++/11/optional \
+  ../mem_cache/include/output.hpp \
   ../enums/include/address.hpp \
   ../mem_cache/include/block.hpp \
   /usr/include/c++/11/cstddef \
@@ -290,7 +291,8 @@ CMakeFiles/sim_cache.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/bits/stl_queue.h \
   ../mem_cache/include/instruction.hpp \
   ../mem_architecture_sim.hpp \
-  ../mem_cache/include/block.hpp
+  ../mem_cache/include/block.hpp \
+  ../mem_cache/include/output.hpp
 
 CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp \
   /usr/include/stdc-predef.h \
@@ -484,20 +486,33 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   /usr/include/c++/11/bits/ostream.tcc \
   /usr/include/c++/11/istream \
   /usr/include/c++/11/bits/istream.tcc \
-  /usr/include/c++/11/fstream \
+  /usr/include/c++/11/iomanip \
+  /usr/include/c++/11/locale \
+  /usr/include/c++/11/bits/locale_facets_nonio.h \
+  /usr/include/c++/11/ctime \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/time_members.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/messages_members.h \
+  /usr/include/libintl.h \
   /usr/include/c++/11/bits/codecvt.h \
-  /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
-  /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
-  /usr/include/c++/11/bits/fstream.tcc \
-  /usr/include/c++/11/optional \
+  /usr/include/c++/11/bits/locale_facets_nonio.tcc \
+  /usr/include/c++/11/bits/locale_conv.h \
+  /usr/include/c++/11/bits/unique_ptr.h \
   /usr/include/c++/11/utility \
   /usr/include/c++/11/bits/stl_relops.h \
-  /usr/include/c++/11/bits/enable_special_members.h \
-  /usr/include/c++/11/functional \
   /usr/include/c++/11/tuple \
   /usr/include/c++/11/array \
   /usr/include/c++/11/bits/uses_allocator.h \
   /usr/include/c++/11/bits/invoke.h \
+  /usr/include/c++/11/bits/quoted_string.h \
+  /usr/include/c++/11/sstream \
+  /usr/include/c++/11/bits/sstream.tcc \
+  /usr/include/c++/11/fstream \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
+  /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
+  /usr/include/c++/11/bits/fstream.tcc \
+  /usr/include/c++/11/optional \
+  /usr/include/c++/11/bits/enable_special_members.h \
+  /usr/include/c++/11/functional \
   /usr/include/c++/11/bits/refwrap.h \
   /usr/include/c++/11/bits/std_function.h \
   /usr/include/c++/11/unordered_map \
@@ -512,8 +527,6 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   /usr/include/c++/11/bits/stl_vector.h \
   /usr/include/c++/11/bits/stl_bvector.h \
   /usr/include/c++/11/bits/vector.tcc \
-  /usr/include/c++/11/sstream \
-  /usr/include/c++/11/bits/sstream.tcc \
   ../enums/include/inclusion_property.hpp \
   ../enums/include/replacement_policy.hpp \
   ../enums/include/memory_access.hpp \
@@ -525,7 +538,6 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   /usr/include/c++/11/bits/stl_raw_storage_iter.h \
   /usr/include/c++/11/bits/align.h \
   /usr/include/c++/11/bit \
-  /usr/include/c++/11/bits/unique_ptr.h \
   /usr/include/c++/11/bits/shared_ptr.h \
   /usr/include/c++/11/bits/shared_ptr_base.h \
   /usr/include/c++/11/bits/allocated_ptr.h \
@@ -566,6 +578,7 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   /usr/include/c++/11/bits/uses_allocator_args.h \
   /usr/include/c++/11/pstl/glue_memory_defs.h \
   /usr/include/c++/11/pstl/execution_defs.h \
+  ../mem_cache/include/output.hpp \
   ../mem_cache/include/block.hpp \
   ../mem_cache/include/instruction.hpp \
   ../mem_cache/include/set.hpp \
@@ -575,7 +588,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
   /usr/include/c++/11/bits/deque.tcc \
   /usr/include/c++/11/bits/stl_queue.h \
   ../mem_architecture_sim.hpp \
-  ../mem_cache/include/instruction.hpp
+  ../mem_cache/include/instruction.hpp \
+  ../mem_cache/include/output.hpp
 
 
 ../enums/include/memory_access.hpp:
@@ -597,6 +611,8 @@ CMakeFiles/sim_cache.dir/mem_architecture_sim.cpp.o: ../mem_architecture_sim.cpp
 ../mem_cache/include/instruction.hpp:
 
 ../enums/include/address.hpp:
+
+../mem_cache/include/output.hpp:
 
 /usr/include/c++/11/optional:
 

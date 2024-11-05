@@ -1,24 +1,56 @@
+#ifndef OUTPUT_HPP
+#define OUTPUT_HPP
+
 #include <iostream>
 #include <iomanip>
+#include <string>
+#include "address.hpp"
+#include "block.hpp"
+#include "replacement_policy.hpp"
 
-#define FORMAT_SPACE_LEFT 8
-#define FORMAT_SPACE_RIGHT 10
+// Set appropriate format spacing for output
+const int FORMAT_SPACE_LEFT = 15;
+const int FORMAT_SPACE_RIGHT = 10;
 
-namespace Output
-{
 
-     inline void leftOut(std::string input)
+     class Output
      {
-          using std::left;
-          using std::setw;
-          std::cout << left << setw(FORMAT_SPACE_LEFT) << input;
-     }
+     public:
+          Output(std::string name, bool debug, unsigned int blocksize, 
+                 unsigned int numSets, ReplacementPolicy replacement_policy)
+              : name(name), debug(debug), blocksize(blocksize), numSets(numSets), 
+                replacement_policy(replacement_policy) {}
 
-     inline void outRight(std::string input)
-     {
-          using std::left;
-          using std::setw;
-          std::cout << left << setw(FORMAT_SPACE_RIGHT) << input;
-     }
+          void address_output(const Address &address);
+          void block_output(Block &block);
+          void victim_output(Block &block);
+          void op_output(const std::string &op, unsigned int addr);
+          void hit_output();
+          void miss_output();
+          void update_policy_output();
+          void dirty_output();
 
-} // namespace Output
+          // Inline functions
+          static inline void leftOut(const std::string &input)
+          {
+               using std::left;
+               using std::setw;
+               std::cout << left << setw(FORMAT_SPACE_LEFT) << input;
+          }
+
+          static inline void outRight(const std::string &input)
+          {
+               using std::left;
+               using std::setw;
+               std::cout << left << setw(FORMAT_SPACE_RIGHT) << input;
+          }
+
+     private:
+          std::string name;
+          bool debug;
+          unsigned int blocksize;
+          unsigned int numSets;
+          ReplacementPolicy replacement_policy;
+     };
+
+#endif // OUTPUT_HPP

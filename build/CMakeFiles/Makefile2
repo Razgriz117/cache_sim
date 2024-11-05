@@ -133,12 +133,12 @@ mem_cache/src/clean:
 CMakeFiles/sim_cache.dir/all: mem_cache/CMakeFiles/mem_cache.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sim_cache.dir/build.make CMakeFiles/sim_cache.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=7,8,9 "Built target sim_cache"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=8,9,10 "Built target sim_cache"
 .PHONY : CMakeFiles/sim_cache.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/sim_cache.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles 9
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles 10
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/sim_cache.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles 0
 .PHONY : CMakeFiles/sim_cache.dir/rule
@@ -159,12 +159,12 @@ CMakeFiles/sim_cache.dir/clean:
 mem_cache/CMakeFiles/mem_cache.dir/all:
 	$(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/depend
 	$(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target mem_cache"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target mem_cache"
 .PHONY : mem_cache/CMakeFiles/mem_cache.dir/all
 
 # Build rule for subdir invocation for target.
 mem_cache/CMakeFiles/mem_cache.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles 7
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mem_cache/CMakeFiles/mem_cache.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles 0
 .PHONY : mem_cache/CMakeFiles/mem_cache.dir/rule

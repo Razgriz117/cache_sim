@@ -7,6 +7,7 @@
 #include <optional>
 #include <vector>
 
+#include "output.hpp"
 #include "inclusion_property.hpp"
 #include "replacement_policy.hpp"
 #include "address.hpp"
@@ -21,7 +22,7 @@ public:
      Cache(const std::string name, unsigned int blocksize, unsigned int size, 
            unsigned int assoc,
            ReplacementPolicy replacement_policy, InclusionProperty inclusion_property,
-           std::vector<Instruction> &instructions);
+           std::vector<Instruction> &instructions, bool debug);
 
      std::optional<std::reference_wrapper<Block>> read(unsigned int addr);
      std::optional<std::reference_wrapper<Block>> write(unsigned int addr);
@@ -58,12 +59,22 @@ public:
 
 private :
      void construct_set_traces(std::vector<Instruction> &instructions);
+     void address_output(const Address &address);
+     void block_output(Block &block);
+     void op_output(std::string op, unsigned int addr);
+     void hit_output();
+     void miss_output();
+     void victim_output(Block &block);
+     void no_victim_output();
+
+     bool debug;
 
      unsigned int assoc;
      unsigned int blocksize;
      unsigned int size;
      unsigned int numSets;
      unsigned int numAccesses;
+
      ReplacementPolicy replacement_policy;
      InclusionProperty inclusion_property;
      std::vector<Instruction> instructions;

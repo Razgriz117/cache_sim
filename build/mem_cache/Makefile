@@ -226,6 +226,30 @@ src/instruction.cpp.s:
 	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/src/instruction.cpp.s
 .PHONY : src/instruction.cpp.s
 
+src/output.o: src/output.cpp.o
+.PHONY : src/output.o
+
+# target to build an object file
+src/output.cpp.o:
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/src/output.cpp.o
+.PHONY : src/output.cpp.o
+
+src/output.i: src/output.cpp.i
+.PHONY : src/output.i
+
+# target to preprocess a source file
+src/output.cpp.i:
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/src/output.cpp.i
+.PHONY : src/output.cpp.i
+
+src/output.s: src/output.cpp.s
+.PHONY : src/output.s
+
+# target to generate assembly for a file
+src/output.cpp.s:
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build && $(MAKE) $(MAKESILENT) -f mem_cache/CMakeFiles/mem_cache.dir/build.make mem_cache/CMakeFiles/mem_cache.dir/src/output.cpp.s
+.PHONY : src/output.cpp.s
+
 src/set.o: src/set.cpp.o
 .PHONY : src/set.o
 
@@ -271,6 +295,9 @@ help:
 	@echo "... src/instruction.o"
 	@echo "... src/instruction.i"
 	@echo "... src/instruction.s"
+	@echo "... src/output.o"
+	@echo "... src/output.i"
+	@echo "... src/output.s"
 	@echo "... src/set.o"
 	@echo "... src/set.i"
 	@echo "... src/set.s"

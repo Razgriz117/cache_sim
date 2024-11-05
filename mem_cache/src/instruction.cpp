@@ -13,11 +13,11 @@ std::string Instruction::to_string() const
     std::string op_str{};
     switch (operation)
     {
-        case MemoryAccess::Read:  op_str = "Read "; break;
-        case MemoryAccess::Write: op_str = "Write"; break;
+        case MemoryAccess::Read:  op_str = "read"; break;
+        case MemoryAccess::Write: op_str = "write"; break;
     }
 
-    std::ostringstream oss;      // Create an output string stream
-    oss << op_str << " " << std::hex << address; // Output the op followed by the address
-    return oss.str();            // Return the string representation
+    std::ostringstream oss;
+    oss << op_str << " " << std::hex << address;
+    return oss.str();
 }

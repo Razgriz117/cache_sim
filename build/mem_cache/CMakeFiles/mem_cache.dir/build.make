@@ -111,10 +111,24 @@ mem_cache/CMakeFiles/mem_cache.dir/src/block.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mem_cache.dir/src/block.cpp.s"
 	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/mem_cache/src/block.cpp -o CMakeFiles/mem_cache.dir/src/block.cpp.s
 
+mem_cache/CMakeFiles/mem_cache.dir/src/output.cpp.o: mem_cache/CMakeFiles/mem_cache.dir/flags.make
+mem_cache/CMakeFiles/mem_cache.dir/src/output.cpp.o: ../mem_cache/src/output.cpp
+mem_cache/CMakeFiles/mem_cache.dir/src/output.cpp.o: mem_cache/CMakeFiles/mem_cache.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object mem_cache/CMakeFiles/mem_cache.dir/src/output.cpp.o"
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT mem_cache/CMakeFiles/mem_cache.dir/src/output.cpp.o -MF CMakeFiles/mem_cache.dir/src/output.cpp.o.d -o CMakeFiles/mem_cache.dir/src/output.cpp.o -c /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/mem_cache/src/output.cpp
+
+mem_cache/CMakeFiles/mem_cache.dir/src/output.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mem_cache.dir/src/output.cpp.i"
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/mem_cache/src/output.cpp > CMakeFiles/mem_cache.dir/src/output.cpp.i
+
+mem_cache/CMakeFiles/mem_cache.dir/src/output.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mem_cache.dir/src/output.cpp.s"
+	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/mem_cache/src/output.cpp -o CMakeFiles/mem_cache.dir/src/output.cpp.s
+
 mem_cache/CMakeFiles/mem_cache.dir/src/cache.cpp.o: mem_cache/CMakeFiles/mem_cache.dir/flags.make
 mem_cache/CMakeFiles/mem_cache.dir/src/cache.cpp.o: ../mem_cache/src/cache.cpp
 mem_cache/CMakeFiles/mem_cache.dir/src/cache.cpp.o: mem_cache/CMakeFiles/mem_cache.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object mem_cache/CMakeFiles/mem_cache.dir/src/cache.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object mem_cache/CMakeFiles/mem_cache.dir/src/cache.cpp.o"
 	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT mem_cache/CMakeFiles/mem_cache.dir/src/cache.cpp.o -MF CMakeFiles/mem_cache.dir/src/cache.cpp.o.d -o CMakeFiles/mem_cache.dir/src/cache.cpp.o -c /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/mem_cache/src/cache.cpp
 
 mem_cache/CMakeFiles/mem_cache.dir/src/cache.cpp.i: cmake_force
@@ -128,7 +142,7 @@ mem_cache/CMakeFiles/mem_cache.dir/src/cache.cpp.s: cmake_force
 mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: mem_cache/CMakeFiles/mem_cache.dir/flags.make
 mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: ../mem_cache/src/set.cpp
 mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o: mem_cache/CMakeFiles/mem_cache.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o"
 	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o -MF CMakeFiles/mem_cache.dir/src/set.cpp.o.d -o CMakeFiles/mem_cache.dir/src/set.cpp.o -c /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/mem_cache/src/set.cpp
 
 mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.i: cmake_force
@@ -144,6 +158,7 @@ mem_cache_OBJECTS = \
 "CMakeFiles/mem_cache.dir/src/address.cpp.o" \
 "CMakeFiles/mem_cache.dir/src/instruction.cpp.o" \
 "CMakeFiles/mem_cache.dir/src/block.cpp.o" \
+"CMakeFiles/mem_cache.dir/src/output.cpp.o" \
 "CMakeFiles/mem_cache.dir/src/cache.cpp.o" \
 "CMakeFiles/mem_cache.dir/src/set.cpp.o"
 
@@ -153,11 +168,12 @@ mem_cache_EXTERNAL_OBJECTS =
 mem_cache/libmem_cache.a: mem_cache/CMakeFiles/mem_cache.dir/src/address.cpp.o
 mem_cache/libmem_cache.a: mem_cache/CMakeFiles/mem_cache.dir/src/instruction.cpp.o
 mem_cache/libmem_cache.a: mem_cache/CMakeFiles/mem_cache.dir/src/block.cpp.o
+mem_cache/libmem_cache.a: mem_cache/CMakeFiles/mem_cache.dir/src/output.cpp.o
 mem_cache/libmem_cache.a: mem_cache/CMakeFiles/mem_cache.dir/src/cache.cpp.o
 mem_cache/libmem_cache.a: mem_cache/CMakeFiles/mem_cache.dir/src/set.cpp.o
 mem_cache/libmem_cache.a: mem_cache/CMakeFiles/mem_cache.dir/build.make
 mem_cache/libmem_cache.a: mem_cache/CMakeFiles/mem_cache.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX static library libmem_cache.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX static library libmem_cache.a"
 	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache && $(CMAKE_COMMAND) -P CMakeFiles/mem_cache.dir/cmake_clean_target.cmake
 	cd /home/razgriz117/Martin/CodeDirectory/UCF/architecture/program1/simulator/build/mem_cache && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mem_cache.dir/link.txt --verbose=$(VERBOSE)
 

@@ -19,6 +19,7 @@
 #define DECIMAL 10
 #define DIRECT_MAPPED 1
 #define FORMAT_SPACE 23
+const bool DEBUG = true;
 
 // Convert string to unsigned int with error checking.
 unsigned int convertToUnsignedInt(const char *arg)
@@ -107,7 +108,8 @@ int main(int argc, char *argv[])
          DIRECT_MAPPED,
          static_cast<ReplacementPolicy>(REPLACEMENT_POLICY),
          static_cast<InclusionProperty>(INCLUSION_PROPERTY),
-         mem_instructions
+         mem_instructions,
+         DEBUG
      );
 
      // Construct cache simulator.
@@ -118,7 +120,8 @@ int main(int argc, char *argv[])
           REPLACEMENT_POLICY,
           INCLUSION_PROPERTY,
           trace_file,
-          main_memory
+          main_memory,
+          DEBUG
      );
 
      return 0;

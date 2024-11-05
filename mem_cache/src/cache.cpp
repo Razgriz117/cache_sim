@@ -19,12 +19,12 @@
 Cache::Cache(const std::string name, unsigned int blocksize, unsigned int size,
              unsigned int assoc,
              ReplacementPolicy replacement_policy, InclusionProperty inclusion_property,
-             std::vector<Instruction> &instructions)
+             std::vector<Instruction> &instructions, bool debug)
 
     : name(name), blocksize(blocksize), size(size), assoc(assoc),
       replacement_policy(replacement_policy), inclusion_property(inclusion_property),
       numAccesses(0), reads(0), read_misses(0), writes(0), write_misses(0), write_backs(0),
-      miss_rate(0.0)
+      miss_rate(0.0), debug(debug)
 {
      // Calculate number of sets.
      numSets = size / (blocksize * assoc);
@@ -32,7 +32,7 @@ Cache::Cache(const std::string name, unsigned int blocksize, unsigned int size,
      // Initialize the cache with Set objects, each set containing `assoc` blocks.
      for (unsigned int i = 0; i < numSets; ++i)
      {
-          cache.emplace_back(Set(assoc, blocksize, replacement_policy));
+          cache.emplace_back(Set(assoc, blocksize, replacement_policy, name, debug));
      }
 
      // Construct set traces for Optimal replacement policy.
@@ -45,6 +45,7 @@ std::optional<std::reference_wrapper<Block>> Cache::read(unsigned int addr)
      // Increment cache accesses.
      access();
      reads++;
+     op_output("read", addr);
      // if (VERBOSE) std::cout << "Read " << std::hex << addr << " from " << name << std::endl;
      // fflush(stdout);
 
@@ -57,44 +58,23 @@ std::optional<std::reference_wrapper<Block>> Cache::read(unsigned int addr)
           return newBlock;
      }
 
-     // if (VERBOSE) std::cout << "    Reading " << std::hex << addr << " in cache " << name << std::endl;
-
-     // std::string next_cache_name{};
-     // if (next_mem_level == NULL) next_cache_name = "NONE!";
-     // else next_cache_name = next_mem_level->name;
-     // if (VERBOSE) std::cout << "    Next cache: " << next_cache_name << std::endl;
-
-     // Decode address.
-     // auto address = Address(addr, blocksize, numSets);
-
-     // // Read from the matching set.
-     // Set &set = cache[address.setIndex];
-     // auto result = set.read(address);
-
      // Read from current cache.
      auto result = search(addr);
      if (result)
      {
           Block &found_block = result->get();
           return found_block;
+          hit_output();
      }
-
-     // // For main memory, reads never miss, so we return a valid block.
-     // if (name == "MAIN_MEMORY")
-     // {
-     //      auto address = Address(addr, blocksize, numSets);
-     //      Set &set = cache[address.setIndex];
-     //      Block &newBlock = *(new Block(blocksize, address));
-
-     //      set.write(newBlock);
-     //      return newBlock;
-     // }
 
      // If we miss, read from lower level caches.
      if (result == MISS)
      {
           read_misses++;
-          if (next_mem_level != NULL) return next_mem_level->read(addr);
+          miss_output();
+          if (next_mem_level != NULL)
+               next_mem_level->read(addr);
+          return MISS;
      }
 
      // Error reading block.
@@ -106,9 +86,7 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
      // Increment cache accesses.
      access();
      writes++;
-
-     if (VERBOSE) std::cout << "Write " << std::hex << addr << "to " << name << std::endl;
-     fflush(stdout);
+     op_output("write", addr);
 
      // For main memory, writes never miss, so we generate a valid block.
      if (name == "MAIN_MEMORY")
@@ -125,9 +103,8 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
      auto result = set.search(address);
      if (result)
      {
-          if (VERBOSE)
-               std::cout << "Found " << std::hex << addr << "in " << name << std::endl;
           found_block = result->get();
+          hit_output();
      }
 
      // // For main memory, writes never miss, so we generate a valid block.
@@ -140,9 +117,8 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
      // If we miss, attempt to update block read from lower level caches.
      else if (result == MISS)
      {
-          if (VERBOSE)
-               std::cout << "Write miss of " << std::hex << addr << "in " << name << std::endl;
           write_misses++;
+          miss_output();
           if (next_mem_level != NULL)
           {
                auto load_result = next_mem_level->read(addr);
@@ -162,15 +138,19 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
           return LOAD_FAILURE;
      }
 
-     if (VERBOSE)
-          std::cout << "Retrieved block " << std::hex << addr << "in " << name << std::endl;
      Block &block = found_block->get();
 
      // Write to the set marked by the address's set index.
      auto victim = set.write(block);
-
-     if (VERBOSE)
-          std::cout << "Wrote " << std::hex << addr << "to set in " << name << std::endl;
+     if (victim)
+     {
+          Block &victim_block = victim->get();
+          victim_output(victim_block);
+     }
+     else
+     {
+          no_victim_output();
+     }
 
      // Maintain inclusive property.
      if (inclusion_property == InclusionProperty::Inclusive && next_mem_level != NULL)
@@ -186,9 +166,6 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
           next_mem_level->write(addr);
      }
 
-     if (VERBOSE)
-          std::cout << "Handled inclusion of " << std::hex << addr << " in " << name << std::endl;
-
      // If we evicted a block during writing, write back to next level of memory.
      if (victim)
      {
@@ -198,9 +175,6 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
           write_backs++;
           return victim_block;
      }
-
-     if (VERBOSE)
-          std::cout << "Handled write back of victim in " << name << std::endl;
 
      // No victim block.
      return EMPTY_BLOCK;
@@ -295,4 +269,84 @@ void Cache::print_contents()
           Output::leftOut("Set:"); Output::leftOut(set);
           cache[i].print_contents();
      }
+}
+
+void Cache::address_output(const Address &address)
+{
+     if (!debug || name == "MAIN_MEMORY")
+          return;
+
+     unsigned int tag = address.tag;
+     unsigned int index = address.setIndex;
+
+     std::ostringstream tag_stream;
+     tag_stream << std::hex << tag;
+
+     std::ostringstream address_stream;
+     address_stream << std::hex << address.value;
+
+     std::cout << address_stream.str() << " ";
+     std::cout << "(tag " << tag_stream.str() << ", index " << index;
+}
+
+void Cache::block_output(Block &block)
+{
+     if (!debug || name == "MAIN_MEMORY")
+          return;
+
+     auto& address = block.getAddress();
+     address_output(address);
+
+     std::string cleanliness{};
+     if (block.isDirty())
+          cleanliness = "dirty";
+     else
+          cleanliness = "clean";
+
+     std::cout << ", " << cleanliness << ")" << std::endl;
+}
+
+void Cache::victim_output(Block &block)
+{
+     if (!debug || name == "MAIN_MEMORY")
+          return;
+
+     std::cout << name << " victim: ";
+     block_output(block);
+}
+
+void Cache::no_victim_output()
+{
+     if (!debug || name == "MAIN_MEMORY")
+          return;
+
+     std::cout << name << " victim: none" << std::endl;
+}
+
+void Cache::op_output(std::string op, unsigned int addr)
+{
+     if (!debug || name == "MAIN_MEMORY") 
+          return;
+
+     auto address = Address(addr, blocksize, numSets);
+     std::cout << name << " " << op << " : ";
+     address_output(address);
+     std::cout << ")" << std::endl;
+}
+
+void Cache::hit_output()
+{
+     if (!debug || name == "MAIN_MEMORY")
+          return;
+
+     std::cout << name << " hit" << std::endl;
+}
+
+
+void Cache::miss_output()
+{
+     if (!debug || name == "MAIN_MEMORY")
+          return;
+
+     std::cout << name << " miss" << std::endl;
 }

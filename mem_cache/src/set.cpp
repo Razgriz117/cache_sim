@@ -21,9 +21,10 @@
 #define HIT std::nullopt
 #define NOT_FOUND UINT_MAX
 
-Set::Set(unsigned int assoc, unsigned int blocksize, ReplacementPolicy replacement_policy)
+Set::Set(unsigned int assoc, unsigned int blocksize, ReplacementPolicy replacement_policy,
+         const std::string cache_name, bool debug)
     : assoc(assoc), blocksize(blocksize), replacement_policy(replacement_policy),
-      LRU_counters(assoc)
+      LRU_counters(assoc), debug(debug), cache_name(cache_name)
 {
      size = 0;
      capacity = assoc;
@@ -41,7 +42,7 @@ std::optional<std::reference_wrapper<Block>> Set::read(const Address &addr)
 std::optional<std::reference_wrapper<Block>> Set::write(const Block &block)
 {
      auto& addr = block.getAddress();
-     write(addr);
+     return write(addr);
 
      // // If the set is not yet full, fill an empty block.
      // if (!isFull())
@@ -117,9 +118,10 @@ std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
 
           Block& block = hit->get();
           block.setDirty();
+          dirty_output();
 
-          // Update replacement policy.
-          if (replacement_policy == ReplacementPolicy::LRU)
+              // Update replacement policy.
+              if (replacement_policy == ReplacementPolicy::LRU)
           {
                unsigned int idx = getIdx(addr);
                update_LRU(idx);
@@ -152,6 +154,9 @@ std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
 
      // Add data.
      // { Get data arg. Do something. Need tag. }
+
+     blocks[victim_idx].setDirty();
+     dirty_output();
 
      return victim_block;
 }
@@ -194,6 +199,8 @@ void Set::fillBlock(const Address &addr)
 {
      // Create new block.
      Block block = Block(blocksize, addr);
+     block.setDirty();
+     dirty_output();
 
      // Add data.
      // { Get data arg. Do something }
@@ -248,9 +255,6 @@ Block Set::replaceBlock_FIFO(const Address &addr)
      // Add data.
      // { Get data arg. Do something. Need tag. }
 
-     // Mark block as dirty.
-     blocks[victim_idx].setDirty();
-
      return victim_block;
 }
 
@@ -278,10 +282,13 @@ void Set::update_LRU(unsigned int idx)
 {
      LRU_counters[idx] = LRU;
      LRU++;
+     update_policy_output();
 }
 
 unsigned int Set::get_FIFO_replacement()
 {
+     update_policy_output();
+
      // Direct mapped cache always replaces the same block.
      if (assoc == DIRECT_MAPPED)
           return ONLY_BLOCK;
@@ -294,6 +301,8 @@ unsigned int Set::get_FIFO_replacement()
 
 unsigned int Set::get_optimal_replacement()
 {
+     update_policy_output();
+
      // Direct mapped cache always replaces the same block.
      if (assoc == DIRECT_MAPPED)
           return ONLY_BLOCK;
@@ -362,4 +371,30 @@ void Set::print_contents()
      }
      std::cout << std::endl;
 }
+
+void Set::update_policy_output()
+{
+     if (!debug || cache_name == "MAIN_MEMORY")
+          return;
+
+     std::cout << cache_name << " update ";
+     std::string policy;
+     switch(replacement_policy)
+     {
+          case ReplacementPolicy::LRU: policy = "LRU"; break;
+          case ReplacementPolicy::FIFO: policy = "FIFO"; break;
+          case ReplacementPolicy::Optimal: policy = "optimal"; break;
+     }
+
+     std::cout << policy << std::endl;
+}
+
+void Set::dirty_output()
+{
+     if (!debug || cache_name == "MAIN_MEMORY")
+          return;
+
+     std::cout << cache_name << " set dirty" << std::endl;
+}
+
 
