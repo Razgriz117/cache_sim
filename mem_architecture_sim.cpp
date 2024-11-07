@@ -25,6 +25,7 @@
 #define L1 0
 
 #define VERBOSE true
+#define LAST_INSTRUCTION 15
 
 // Constructor for MemArchitectureSim
 MemArchitectureSim::MemArchitectureSim(unsigned int blocksize,
@@ -70,7 +71,7 @@ Block& MemArchitectureSim::read(unsigned int address)
      }
      
      // Allocate to cache on miss.
-     caches[L1].write(address);
+     caches[L1].allocate(address);
 }
 
 Block MemArchitectureSim::write(unsigned int address)
@@ -152,14 +153,6 @@ void MemArchitectureSim::executeInstructions()
      for (auto instruction : instructions)
      {
           execute(instruction);
-          // // if (VERBOSE) std::cout << "  " << instruction.to_string() << std::endl;
-          // MemoryAccess operation = static_cast<MemoryAccess>(instruction.op);
-          // unsigned int address = instruction.address;
-          // switch (operation)
-          // {
-          //      case MemoryAccess::Read:  read(address);  break;
-          //      case MemoryAccess::Write: write(address); break;
-          // }
      }
 }
 
@@ -169,8 +162,8 @@ void MemArchitectureSim::execute(Instruction &instruction)
      unsigned int address = instruction.address;
      switch (operation)
      {
-     case MemoryAccess::Read: read(address); break;
-     case MemoryAccess::Write: write(address); break;
+          case MemoryAccess::Read: read(address); break;
+          case MemoryAccess::Write: write(address); break;
      }
 }
 
@@ -258,11 +251,27 @@ void MemArchitectureSim::print_debug()
      cout << "----------------------------------------" << endl;
 
      int numInstructions = instructions.size();
-     for (int i = 0; i < numInstructions; i++)
+     int i;
+     for (i = 0; i < numInstructions; i++)
      {
           cout << "# " << std::to_string(i + 1) << " : ";
           cout << instructions[i].to_string() << endl;
           execute(instructions[i]);
           cout << "----------------------------------------" << endl;
+
+          if (i + 1 >= LAST_INSTRUCTION) break;
      }
+
+     // std::vector<Set> sets = caches[L1].getCache();
+     // std::vector<Block> blocks = sets[26].blocks;
+     // Block first = blocks[0];
+     // Block second = blocks[1];
+
+     // // sets[26].print_contents();
+
+     // cout << first.isDirty() << endl;
+     // cout << second.isDirty() << endl;
+
+     // cout << std::hex << first.getAddress().value << endl;
+     // cout << std::hex << second.getAddress().value << endl;
 }

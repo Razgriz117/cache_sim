@@ -28,6 +28,9 @@ public:
      std::optional<std::reference_wrapper<Block>> write(unsigned int addr);
      std::optional<std::reference_wrapper<Block>> search(unsigned int addr);
      std::optional<std::reference_wrapper<Block>> load(unsigned int addr);
+
+     std::optional<std::reference_wrapper<Block>> allocate(unsigned int addr);
+
      void delete_block(unsigned int addr);
 
      // Setters

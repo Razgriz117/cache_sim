@@ -33,6 +33,7 @@ public:
      void setDirty() { dirtyBit = true; }
      void unsetDirty() { dirtyBit = false; }
      void clear() { empty = true; }
+     void occupy() { empty = false; }
 
      // Getters
      std::size_t getBlockSize() const { return blocksize; }
@@ -41,7 +42,7 @@ public:
 private:
      bool empty;
      std::size_t blocksize; // Size of the block in bytes
-     const Address &address;
+     Address address;
      unsigned char *data; // Pointer to the data array (each cell stores a byte)
      bool dirtyBit = false;
 };

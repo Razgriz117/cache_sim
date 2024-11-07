@@ -9,10 +9,14 @@
 
 void Output::address_output(const Address &address)
 {
-     unsigned int tag = address.tag;
      unsigned int index = address.setIndex;
+
+     std::stringstream stream;
+     stream << std::hex << address.tag;
+     std::string tag(stream.str());
+
      std::cout << std::hex << address.value << " ";
-     std::cout << "(tag " << std::hex << tag << ", index " << index;
+     std::cout << "(tag " << tag << ", index " << index;
 }
 
 void Output::block_output(Block &block)

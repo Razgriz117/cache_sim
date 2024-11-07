@@ -13,6 +13,8 @@ public:
      Set(unsigned int assoc, unsigned int blocksize, ReplacementPolicy replacement_policy,
          const std::string cache_name, bool debug);
 
+     void initialize(const Address &addr);
+
      std::vector<Block> blocks;
      std::queue<unsigned int> FIFO_indices;
      std::vector<unsigned int> LRU_counters;
@@ -24,10 +26,15 @@ public:
      std::optional<std::reference_wrapper<Block>> write(const Address &addr);
      std::optional<std::reference_wrapper<Block>> write(const Block &block);
      std::optional<std::reference_wrapper<Block>> search(const Address &addr);
-     unsigned int getIdx(const Address &addr);
 
-     void fillBlock(const Address &addr);
+     std::optional<std::reference_wrapper<Block>> allocate(const Address &addr);
+     unsigned int getIdx(const Address &addr) const;
+
+     
+     void fillBlock(const Block &addr);
      void delete_block(const Address &addr);
+
+     void increaseSize() { size++; }
 
      // Replacement policy methods
      Block replaceBlock_FIFO(const Address &addr);

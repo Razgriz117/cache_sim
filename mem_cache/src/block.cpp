@@ -2,6 +2,7 @@
 #include <stdexcept>
 
 #include "block.hpp"
+#include "address.hpp"
 
 Block::Block(std::size_t blocksize, const Address &addr)
     : blocksize(blocksize), data(new unsigned char[blocksize]), address(addr), empty(false)
@@ -40,6 +41,9 @@ Block &Block::operator=(const Block &other)
 
      // Otherwise, copy the data contents from the right argument's object into the left's.
      std::memcpy(data, other.data, blocksize);
+     this->address = other.address;
+     this->empty = other.empty;
+     this->dirtyBit = other.dirtyBit;
 
      // Address reference remains the same
      return *this;

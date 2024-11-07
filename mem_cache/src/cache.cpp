@@ -32,7 +32,10 @@ Cache::Cache(const std::string name, unsigned int blocksize, unsigned int size,
      // Initialize the cache with Set objects, each set containing `assoc` blocks.
      for (unsigned int i = 0; i < numSets; ++i)
      {
+          auto defaultAddr = Address(0, blocksize, numSets);
           cache.emplace_back(Set(assoc, blocksize, replacement_policy, name, debug));
+          cache[i].initialize(defaultAddr);
+          // cache[i].increaseSize();
      }
 
      // Construct set traces for Optimal replacement policy.
@@ -46,25 +49,28 @@ std::optional<std::reference_wrapper<Block>> Cache::read(unsigned int addr)
      access();
      reads++;
      op_output("read", addr);
-     // if (VERBOSE) std::cout << "Read " << std::hex << addr << " from " << name << std::endl;
-     // fflush(stdout);
+
+     auto address = Address(addr, blocksize, numSets);
+     Set &set = cache[address.setIndex];
 
      // For main memory, reads never miss, so we return a valid block.
      if (name == "MAIN_MEMORY")
      {
-          auto address = Address(addr, blocksize, numSets);
-          Set &set = cache[address.setIndex];
-          Block &newBlock = *(new Block(blocksize, address));
+          // Block &newBlock = *(new Block(blocksize, address));
+          Block block(blocksize, address);
+          Block &newBlock = block;
           return newBlock;
      }
 
      // Read from current cache.
-     auto result = search(addr);
+     auto result = set.search(address);
      if (result)
      {
           Block &found_block = result->get();
-          return found_block;
           hit_output();
+          unsigned int idx = set.getIdx(address);
+          set.update_LRU(idx);
+          return found_block;
      }
 
      // If we miss, read from lower level caches.
@@ -81,6 +87,64 @@ std::optional<std::reference_wrapper<Block>> Cache::read(unsigned int addr)
      return LOAD_FAILURE;
 }
 
+std::optional<std::reference_wrapper<Block>> Cache::allocate(unsigned int addr)
+{
+
+     // The only modifications to memory should be done with write, not allocate.
+     if (name == "MAIN_MEMORY")
+     {
+          return EMPTY_BLOCK;
+     }
+
+     // access(); Shouldn't access because we accessed during read or write to get here?
+     writes++;
+
+     // Decode address.
+     auto address = Address(addr, blocksize, numSets);
+     Set &set = cache[address.setIndex];
+
+     // Write to the set marked by the address's set index.
+     auto victim = set.allocate(address);
+     if (victim)
+     {
+          Block &victim_block = victim->get();
+          std::cout << "Victim block address in cache allocate: "
+                    << victim_block.getAddress() << std::endl;
+          victim_output(victim_block);
+     }
+     else
+     {
+          no_victim_output();
+     }
+
+     // Maintain inclusive property.
+     if (inclusion_property == InclusionProperty::Inclusive && next_mem_level != NULL)
+     {
+          // If block was evicted, remove it from lower level caches.
+          if (victim && prev_mem_level != NULL)
+          {
+               Block &victim_block = victim->get();
+               unsigned int victim_address = victim_block.getAddress().value;
+               prev_mem_level->delete_block(victim_address);
+          }
+          // A block allocated to this cache must be included in next level of memory.
+          next_mem_level->write(addr);
+     }
+
+     // If we evicted a block during allocation, write back to next level of memory.
+     if (victim)
+     {
+          Block &victim_block = victim->get();
+          if (victim_block.isDirty() && next_mem_level != NULL)
+               next_mem_level->write(victim_block.getAddress().value);
+          write_backs++;
+          return victim_block;
+     }
+
+     // No victim block.
+     return EMPTY_BLOCK;
+}
+
 std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
 {
      // Increment cache accesses.
@@ -88,11 +152,13 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
      writes++;
      op_output("write", addr);
 
-     // For main memory, writes never miss, so we generate a valid block.
+     // For main memory, writes never miss and no victim exists.
      if (name == "MAIN_MEMORY")
      {
           return EMPTY_BLOCK;
      }
+
+     // op_output("write", addr); Put it here to remove MAIN_MEMORY output
 
      // Decode address.
      auto address = Address(addr, blocksize, numSets);
@@ -107,13 +173,6 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
           hit_output();
      }
 
-     // // For main memory, writes never miss, so we generate a valid block.
-     // if (result == MISS && name == "MAIN_MEMORY")
-     // {
-     //      set.write(address);
-     //      return EMPTY_BLOCK;
-     // }
-
      // If we miss, attempt to update block read from lower level caches.
      else if (result == MISS)
      {
@@ -121,14 +180,20 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
           miss_output();
           if (next_mem_level != NULL)
           {
-               auto load_result = next_mem_level->read(addr);
-               if (load_result) found_block = load_result->get();
-               else
+               found_block = next_mem_level->read(addr);
+               if (found_block)
                {
-                    std::cout << "Error loading " << std::hex << addr;
-                    std::cout << " from lower caches." << std::endl;
-                    return LOAD_FAILURE;
+                    Block &blocky = found_block->get();
+                    Block current(blocksize, address);
+                    if (blocky.isDirty()) current.setDirty();
                }
+               // if (load_result) found_block = load_result;
+               // else
+               // {
+               //      std::cout << "Error loading " << std::hex << addr;
+               //      std::cout << " from lower caches." << std::endl;
+               //      return LOAD_FAILURE;
+               // }
           }
      }
 
@@ -138,7 +203,10 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
           return LOAD_FAILURE;
      }
 
-     Block &block = found_block->get();
+     Block &found_block_ref = found_block->get();
+     Block block(blocksize, address);
+     if (found_block_ref.isDirty())
+          block.setDirty();
 
      // Write to the set marked by the address's set index.
      auto victim = set.write(block);
