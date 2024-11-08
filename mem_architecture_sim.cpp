@@ -26,7 +26,7 @@
 
 #define VERBOSE true
 #define LAST_INSTRUCTION 90
-#define FORMAT_SPACE 30
+#define SPACES 30
 
 // Constructor for MemArchitectureSim
 MemArchitectureSim::MemArchitectureSim(unsigned int blocksize,
@@ -239,7 +239,8 @@ void out(std::string output)
      using std::endl;
      using std::left;
      using std::setw;
-     cout << left << setw(FORMAT_SPACE) << output;
+     cout << left << setw(SPACES) << output;
+     cout << setw(0);
 }
 
 void MemArchitectureSim::print_contents()
@@ -311,13 +312,13 @@ void MemArchitectureSim::print_contents()
      out(memory_traffic);
      std::cout << std::to_string(main_memory.numAccesses) << std::endl;
 
-     std::string memory_writes = std::string(1, label++) + ". total memory writes:";
-     out(memory_writes);
-     std::cout << std::to_string(main_memory.writes) << std::endl;
+     // std::string memory_writes = std::string(1, label++) + ". total memory writes:";
+     // out(memory_writes);
+     // std::cout << std::to_string(main_memory.writes) << std::endl;
 
-     std::string memory_reads = std::string(1, label++) + ". total memory reads:";
-     out(memory_reads);
-     std::cout << std::to_string(main_memory.reads) << std::endl;
+     // std::string memory_reads = std::string(1, label++) + ". total memory reads:";
+     // out(memory_reads);
+     // std::cout << std::to_string(main_memory.reads) << std::endl;
 }
 
 void MemArchitectureSim::print_debug()

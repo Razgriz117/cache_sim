@@ -43,6 +43,7 @@ void out(std::string var, std::string val)
      using std::left;
      using std::setw;
      cout << left << setw(FORMAT_SPACE) << var << val << endl;
+     cout << setw(0);
 }
 
 int main(int argc, char *argv[])
@@ -90,8 +91,8 @@ int main(int argc, char *argv[])
      out("L1_ASSOC:", std::to_string(L1_ASSOC));
      out("L2_SIZE:", std::to_string(L2_SIZE));
      out("L2_ASSOC:", std::to_string(L2_ASSOC));
-     out("REPLACEMENT_POLICY:", replacement_policy);
-     out("INCLUSION_PROPERTY:", inclusion_property);
+     out("REPLACEMENT POLICY:", replacement_policy);
+     out("INCLUSION PROPERTY:", inclusion_property);
      out("trace_file:", trace_file);
 
      std::vector<unsigned int> CACHE_SIZES = {L1_SIZE, L2_SIZE};

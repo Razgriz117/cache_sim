@@ -9,7 +9,7 @@
 #include "replacement_policy.hpp"
 
 // Set appropriate format spacing for output
-const int FORMAT_SPACE_LEFT = 15;
+const int FORMAT_SPACE_LEFT = 8;
 const int FORMAT_SPACE_RIGHT = 10;
 
 
@@ -36,6 +36,7 @@ const int FORMAT_SPACE_RIGHT = 10;
                using std::left;
                using std::setw;
                std::cout << left << setw(FORMAT_SPACE_LEFT) << input;
+               std::cout << setw(0);
           }
 
           static inline void outRight(const std::string &input)
@@ -43,6 +44,7 @@ const int FORMAT_SPACE_RIGHT = 10;
                using std::left;
                using std::setw;
                std::cout << left << setw(FORMAT_SPACE_RIGHT) << input;
+               std::cout << setw(0);
           }
 
      private:

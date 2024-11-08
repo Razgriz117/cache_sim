@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <optional>
 
 #include "address.hpp"
@@ -349,7 +350,7 @@ void Cache::print_contents()
      for (int i = 0; i < numSets; i++)
      {
           std::string set = std::to_string(i) + ":";
-          Output::leftOut("Set:"); Output::leftOut(set);
+          Output::leftOut("Set"); Output::leftOut(set);
           cache[i].print_contents();
      }
 }
