@@ -135,14 +135,13 @@ std::optional<std::reference_wrapper<Block>> Cache::allocate(unsigned int addr)
      // If we evicted a block during allocation, write back to next level of memory.
      if (displaced_victim)
      {
-          write_backs++;
           // std::cout << "ALLOCATE: WRITE BACK!!!!!!!" << std::endl;
           // std::cout << "NAME: " << name << std::endl;
           // std::cout << "TOTAL WRITE BACKS: " << write_backs << std::endl;
           Block victim_block = victim->get();
           if (victim_block.isDirty() && next_mem_level != NULL)
           {
-               // write_backs++;
+               write_backs++;
                next_mem_level->write(victim_block.getAddress().value);
           }
           Block &victim_ref = victim_block;
@@ -247,14 +246,13 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
      // If we evicted a block during writing, write back to next level of memory.
      if (displaced_victim)
      {
-          write_backs++;
           // std::cout << "WRITE: WRITE BACK!!!!!!!" << std::endl;
           // std::cout << "NAME: " << name << std::endl;
           // std::cout << "TOTAL WRITE BACKS: " << write_backs << std::endl;
           Block victim_block = victim->get();
           if (victim_block.isDirty() && next_mem_level != NULL)
           {
-               // write_backs++;
+               write_backs++;
                next_mem_level->write(victim_block.getAddress().value);
           }
           Block &victim_ref = victim_block;
