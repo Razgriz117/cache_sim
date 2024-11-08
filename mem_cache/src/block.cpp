@@ -41,7 +41,9 @@ Block &Block::operator=(const Block &other)
 
      // Otherwise, copy the data contents from the right argument's object into the left's.
      std::memcpy(data, other.data, blocksize);
-     this->address = other.address;
+
+     auto copyAddress = Address(other.address);
+     this->address = copyAddress;
      this->empty = other.empty;
      this->dirtyBit = other.dirtyBit;
 

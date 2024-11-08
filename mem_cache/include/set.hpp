@@ -35,6 +35,7 @@ public:
      void delete_block(const Address &addr);
 
      void increaseSize() { size++; }
+     unsigned int getSize() { return size; }
 
      // Replacement policy methods
      Block replaceBlock_FIFO(const Address &addr);

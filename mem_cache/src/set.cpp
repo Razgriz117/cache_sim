@@ -64,10 +64,8 @@ std::optional<std::reference_wrapper<Block>> Set::allocate(const Address &addr)
           // Create new block.
           Block block = Block(blocksize, addr);
           fillBlock(block);
-          return EMPTY_BLOCK;
+          return EMPTY_BLOCK; // No victim
      }
-
-     std::cout << "POLICY: " << static_cast<unsigned int>(replacement_policy) << std::endl;
 
      // Otherwise, determine victim block index.
      unsigned int victim_idx;
@@ -87,16 +85,7 @@ std::optional<std::reference_wrapper<Block>> Set::allocate(const Address &addr)
      }
 
      // Get victim block.
-     // NEED TO CREATE A NEW COPY AND PASS THE REFERENCE TO IT
-     Block &victim_block = blocks[victim_idx];
-     std::cout << "Victim block address in set allocate: " 
-     << victim_block.getAddress() << std::endl;
-
-     std::cout << "LRU Counter: " << LRU << std::endl;
-     for (int i = 0; i < LRU_counters.size(); i++)
-     {
-          std::cout << "Counter " << i << ": " << LRU_counters[i] << std::endl;
-     }
+     Block victim_block = blocks[victim_idx];
 
      // Replace victim block.
      Block block = Block(blocksize, addr);
@@ -105,14 +94,33 @@ std::optional<std::reference_wrapper<Block>> Set::allocate(const Address &addr)
      // Add data.
      // { Get data arg. Do something. Need tag. }
 
-     std::cout << "Victim block address in set allocate: "
-               << victim_block.getAddress() << std::endl;
-
-     return victim_block;
+     Block &victim_ref = victim_block;
+     return victim_ref;
 }
 
 std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
 {
+     auto hit = search(addr);
+     if (hit)
+     {
+          // Add data.
+          // { Get data arg. Do something. Need tag. }
+
+          Block &block = hit->get();
+          block.setDirty();
+          dirty_output();
+
+          // Update replacement policy.
+          if (replacement_policy == ReplacementPolicy::LRU)
+          {
+               unsigned int idx = getIdx(addr);
+               update_LRU(idx);
+               // LRU_counters[idx] = LRU;
+               // LRU++;
+          }
+          return HIT; // No victim
+     }
+
      // If the set is not yet full, fill an empty block.
      if (!isFull())
      {
@@ -121,28 +129,7 @@ std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
           block.setDirty();
           dirty_output();
           fillBlock(block);
-          return EMPTY_BLOCK;
-     }
-
-     auto hit = search(addr);
-     if (hit)
-     {
-          // Add data.
-          // { Get data arg. Do something. Need tag. }
-
-          Block& block = hit->get();
-          block.setDirty();
-          dirty_output();
-
-              // Update replacement policy.
-              if (replacement_policy == ReplacementPolicy::LRU)
-          {
-               unsigned int idx = getIdx(addr);
-               update_LRU(idx);
-               // LRU_counters[idx] = LRU;
-               // LRU++;
-          }
-          return HIT;
+          return EMPTY_BLOCK; // No victim
      }
 
      // Otherwise, determine victim block index.
@@ -160,7 +147,7 @@ std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
      }
 
      // Get victim block.
-     Block& victim_block = blocks[victim_idx];
+     Block victim_block = blocks[victim_idx];
 
      // Replace victim block.
      Block block = Block(blocksize, addr);
@@ -172,7 +159,8 @@ std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
      blocks[victim_idx].setDirty();
      dirty_output();
 
-     return victim_block;
+     Block &victim_ref = victim_block;
+     return victim_ref;
 }
 
 std::optional<std::reference_wrapper<Block>> Set::search(const Address &addr)
@@ -222,8 +210,6 @@ void Set::fillBlock(const Block &block)
      blocks[open_block] = block;
      blocks[open_block].occupy();
      size++;
-
-     // std::cout << "POLICY: " << static_cast<unsigned int>(replacement_policy) << std::endl;
 
      for (int i = 0; i < assoc; i++)
      {
@@ -306,7 +292,6 @@ unsigned int Set::get_LRU_replacement()
 
      // Calculate the index from the iterator
      unsigned int victim_idx = std::distance(LRU_counters.begin(), minIt);
-     std::cout << "VICTIM IDX: " << victim_idx << std::endl;
 
      // Update most recently used.
      update_LRU(victim_idx);
@@ -318,13 +303,8 @@ unsigned int Set::get_LRU_replacement()
 
 void Set::update_LRU(unsigned int idx)
 {
-     std::cout << "LRU: " << LRU << std::endl;
      LRU_counters[idx] = LRU;
      LRU++;
-     std::cout << "LRU[" << idx << "]: " << LRU_counters[idx] << std::endl;
-     std::cout << "LRU: " << LRU << std::endl;
-     for (auto counter: LRU_counters)
-          std::cout << counter << std::endl;
      update_policy_output();
 }
 

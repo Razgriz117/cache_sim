@@ -97,20 +97,21 @@ std::optional<std::reference_wrapper<Block>> Cache::allocate(unsigned int addr)
      }
 
      // access(); Shouldn't access because we accessed during read or write to get here?
-     writes++;
+     // writes++;
 
      // Decode address.
      auto address = Address(addr, blocksize, numSets);
      Set &set = cache[address.setIndex];
 
+
      // Write to the set marked by the address's set index.
+     bool displaced_victim = false;
      auto victim = set.allocate(address);
      if (victim)
      {
-          Block &victim_block = victim->get();
-          std::cout << "Victim block address in cache allocate: "
-                    << victim_block.getAddress() << std::endl;
+          Block victim_block = victim->get();
           victim_output(victim_block);
+          displaced_victim = true;
      }
      else
      {
@@ -123,7 +124,7 @@ std::optional<std::reference_wrapper<Block>> Cache::allocate(unsigned int addr)
           // If block was evicted, remove it from lower level caches.
           if (victim && prev_mem_level != NULL)
           {
-               Block &victim_block = victim->get();
+               Block victim_block = victim->get();
                unsigned int victim_address = victim_block.getAddress().value;
                prev_mem_level->delete_block(victim_address);
           }
@@ -132,13 +133,20 @@ std::optional<std::reference_wrapper<Block>> Cache::allocate(unsigned int addr)
      }
 
      // If we evicted a block during allocation, write back to next level of memory.
-     if (victim)
+     if (displaced_victim)
      {
-          Block &victim_block = victim->get();
-          if (victim_block.isDirty() && next_mem_level != NULL)
-               next_mem_level->write(victim_block.getAddress().value);
           write_backs++;
-          return victim_block;
+          // std::cout << "ALLOCATE: WRITE BACK!!!!!!!" << std::endl;
+          // std::cout << "NAME: " << name << std::endl;
+          // std::cout << "TOTAL WRITE BACKS: " << write_backs << std::endl;
+          Block victim_block = victim->get();
+          if (victim_block.isDirty() && next_mem_level != NULL)
+          {
+               // write_backs++;
+               next_mem_level->write(victim_block.getAddress().value);
+          }
+          Block &victim_ref = victim_block;
+          return victim_ref;
      }
 
      // No victim block.
@@ -210,10 +218,12 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
 
      // Write to the set marked by the address's set index.
      auto victim = set.write(block);
+     bool displaced_victim = false;
      if (victim)
      {
-          Block &victim_block = victim->get();
+          Block victim_block = victim->get();
           victim_output(victim_block);
+          displaced_victim = true;
      }
      else
      {
@@ -226,7 +236,7 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
           // If block was evicted, remove it from lower level caches.
           if (victim && prev_mem_level != NULL)
           {
-               Block &victim_block = victim->get();
+               Block victim_block = victim->get();
                unsigned int victim_address = victim_block.getAddress().value;
                prev_mem_level->delete_block(victim_address);
           }
@@ -235,13 +245,20 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
      }
 
      // If we evicted a block during writing, write back to next level of memory.
-     if (victim)
+     if (displaced_victim)
      {
-          Block &victim_block = victim->get();
-          if (victim_block.isDirty() && next_mem_level != NULL)
-               next_mem_level->write(victim_block.getAddress().value);
           write_backs++;
-          return victim_block;
+          // std::cout << "WRITE: WRITE BACK!!!!!!!" << std::endl;
+          // std::cout << "NAME: " << name << std::endl;
+          // std::cout << "TOTAL WRITE BACKS: " << write_backs << std::endl;
+          Block victim_block = victim->get();
+          if (victim_block.isDirty() && next_mem_level != NULL)
+          {
+               // write_backs++;
+               next_mem_level->write(victim_block.getAddress().value);
+          }
+          Block &victim_ref = victim_block;
+          return victim_ref;
      }
 
      // No victim block.

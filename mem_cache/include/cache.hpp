@@ -59,6 +59,7 @@ public:
      unsigned int write_misses;
      double miss_rate;
      unsigned int write_backs;
+     unsigned int numAccesses;
 
 private :
      void construct_set_traces(std::vector<Instruction> &instructions);
@@ -76,7 +77,6 @@ private :
      unsigned int blocksize;
      unsigned int size;
      unsigned int numSets;
-     unsigned int numAccesses;
 
      ReplacementPolicy replacement_policy;
      InclusionProperty inclusion_property;

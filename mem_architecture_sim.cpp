@@ -25,7 +25,8 @@
 #define L1 0
 
 #define VERBOSE true
-#define LAST_INSTRUCTION 15
+#define LAST_INSTRUCTION 90
+#define FORMAT_SPACE 30
 
 // Constructor for MemArchitectureSim
 MemArchitectureSim::MemArchitectureSim(unsigned int blocksize,
@@ -232,6 +233,15 @@ void MemArchitectureSim::printInstructions()
      }
 }
 
+void out(std::string output)
+{
+     using std::cout;
+     using std::endl;
+     using std::left;
+     using std::setw;
+     cout << left << setw(FORMAT_SPACE) << output;
+}
+
 void MemArchitectureSim::print_contents()
 {
      for (int i = 0; i < numCaches; i++)
@@ -239,6 +249,75 @@ void MemArchitectureSim::print_contents()
           std::cout << "===== L" << std::to_string(i+1) << " contents =====" << std::endl;
           caches[i].print_contents();
      }
+
+     std::cout << "===== Simulation results (raw) =====" << std::endl;
+
+     char label = 'a';
+     std::string reads, read_misses, writes, write_misses, miss_rate, writebacks;
+     std::string memory_traffic{};
+     unsigned int originalNumCaches = cache_sizes.size();
+     for (std::size_t i = 0; i < originalNumCaches; i++)
+     {
+          std::string name = "L" + std::to_string(i + 1); // (i.g. "L1")
+          reads = std::string(1, label++) + ". number of " + name + " reads:";
+          read_misses = std::string(1, label++) + ". number of " + name + " read misses:";
+          writes = std::string(1, label++) + ". number of " + name + " writes:";
+          write_misses = std::string(1, label++) + ". number of " + name + " write misses:";
+          miss_rate = std::string(1, label++) + ". " + name + " miss rate:";
+          writebacks = std::string(1, label++) + ". number of " + name + " writebacks:";
+
+          if (cache_sizes[i] > 0)
+          {
+               out(reads);
+               std::cout << std::to_string(caches[i].reads) << std::endl;
+
+               out(read_misses);
+               std::cout << std::to_string(caches[i].read_misses) << std::endl;
+
+               out(writes);
+               std::cout << std::to_string(caches[i].writes) << std::endl;
+
+               out(write_misses);
+               std::cout << std::to_string(caches[i].write_misses) << std::endl;
+
+               out(miss_rate);
+               std::cout << std::to_string(caches[i].miss_rate) << std::endl;
+
+               out(writebacks);
+               std::cout << std::to_string(caches[i].write_backs) << std::endl;
+          }
+          else
+          {
+               out(reads);
+               std::cout << "0" << std::endl;
+
+               out(read_misses);
+               std::cout << "0" << std::endl;
+
+               out(writes);
+               std::cout << "0" << std::endl;
+
+               out(write_misses);
+               std::cout << "0" << std::endl;
+               
+               out(miss_rate);
+               std::cout << "0" << std::endl;
+
+               out(writebacks);
+               std::cout << "0" << std::endl;
+          }
+     }
+     memory_traffic = std::string(1, label++) + ". total memory traffic:";
+     out(memory_traffic);
+     std::cout << std::to_string(main_memory.numAccesses) << std::endl;
+
+     std::string memory_writes = std::string(1, label++) + ". total memory writes:";
+     out(memory_writes);
+     std::cout << std::to_string(main_memory.writes) << std::endl;
+
+     std::string memory_reads = std::string(1, label++) + ". total memory reads:";
+     out(memory_reads);
+     std::cout << std::to_string(main_memory.reads) << std::endl;
 }
 
 void MemArchitectureSim::print_debug()
@@ -259,10 +338,15 @@ void MemArchitectureSim::print_debug()
           execute(instructions[i]);
           cout << "----------------------------------------" << endl;
 
-          if (i + 1 >= LAST_INSTRUCTION) break;
+          // if (i + 1 >= LAST_INSTRUCTION) break;
      }
 
+
      // std::vector<Set> sets = caches[L1].getCache();
+     // for (int i = 0; i < sets.size(); i++)
+     // {
+     //      std::cout << "Set " << i << " size: " << sets[i].getSize() << std::endl;
+     // }
      // std::vector<Block> blocks = sets[26].blocks;
      // Block first = blocks[0];
      // Block second = blocks[1];

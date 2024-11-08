@@ -19,7 +19,7 @@
 #define DECIMAL 10
 #define DIRECT_MAPPED 1
 #define FORMAT_SPACE 23
-const bool DEBUG = true;
+const bool DEBUG = false;
 
 // Convert string to unsigned int with error checking.
 unsigned int convertToUnsignedInt(const char *arg)
