@@ -47,6 +47,8 @@ public:
      InclusionProperty getInclusionProperty() const { return inclusion_property; }
      const std::vector<Set> &getCache() const { return cache; }
 
+     void update_optimal(unsigned int addr);
+
      void print_contents();
 
      Cache *prev_mem_level = NULL;

@@ -45,16 +45,20 @@ public:
      void update_LRU(unsigned int idx);
 
      unsigned int get_optimal_replacement();
+     void update_optimal() { trace_idx++; }
 
      void mark_used(unsigned int address, std::vector<unsigned int> &indices);
 
      void print_contents();
+     void print_trace();
+     void update_policy_output();
+     void dirty_output();
 
 private:
      void leftOut(std::string input);
      void outRight(std::string input);
-     void update_policy_output();
-     void dirty_output();
+     
+     
 
      bool debug;
 

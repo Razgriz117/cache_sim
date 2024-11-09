@@ -23,9 +23,10 @@
 #define MISS std::nullopt
 #define EMPTY_BLOCK std::nullopt
 #define L1 0
+#define L2 1
 
 #define VERBOSE true
-#define LAST_INSTRUCTION 90
+#define LAST_INSTRUCTION 200
 #define SPACES 30
 
 // Constructor for MemArchitectureSim
@@ -59,6 +60,12 @@ MemArchitectureSim::MemArchitectureSim(unsigned int blocksize,
      memory_traffic = main_memory.reads + main_memory.writes;
 
      print_contents();
+
+     double L1MR = caches[L1].miss_rate;
+     double L2MR = caches[L2].miss_rate;
+     unsigned int L1Size = cache_sizes[L1];
+     unsigned int L2Size = cache_sizes[L2];
+     unsigned int ASSOC = cache_assocs[L1];
 }
 
 Block& MemArchitectureSim::read(unsigned int address)
@@ -72,7 +79,7 @@ Block& MemArchitectureSim::read(unsigned int address)
      }
      
      // Allocate to cache on miss.
-     caches[L1].allocate(address);
+     // caches[L1].allocate(address);
 }
 
 Block MemArchitectureSim::write(unsigned int address)
@@ -311,14 +318,6 @@ void MemArchitectureSim::print_contents()
      memory_traffic = std::string(1, label++) + ". total memory traffic:";
      out(memory_traffic);
      std::cout << std::to_string(main_memory.numAccesses) << std::endl;
-
-     // std::string memory_writes = std::string(1, label++) + ". total memory writes:";
-     // out(memory_writes);
-     // std::cout << std::to_string(main_memory.writes) << std::endl;
-
-     // std::string memory_reads = std::string(1, label++) + ". total memory reads:";
-     // out(memory_reads);
-     // std::cout << std::to_string(main_memory.reads) << std::endl;
 }
 
 void MemArchitectureSim::print_debug()
@@ -341,22 +340,4 @@ void MemArchitectureSim::print_debug()
 
           // if (i + 1 >= LAST_INSTRUCTION) break;
      }
-
-
-     // std::vector<Set> sets = caches[L1].getCache();
-     // for (int i = 0; i < sets.size(); i++)
-     // {
-     //      std::cout << "Set " << i << " size: " << sets[i].getSize() << std::endl;
-     // }
-     // std::vector<Block> blocks = sets[26].blocks;
-     // Block first = blocks[0];
-     // Block second = blocks[1];
-
-     // // sets[26].print_contents();
-
-     // cout << first.isDirty() << endl;
-     // cout << second.isDirty() << endl;
-
-     // cout << std::hex << first.getAddress().value << endl;
-     // cout << std::hex << second.getAddress().value << endl;
 }

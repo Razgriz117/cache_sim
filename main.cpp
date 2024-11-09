@@ -19,7 +19,7 @@
 #define DECIMAL 10
 #define DIRECT_MAPPED 1
 #define FORMAT_SPACE 23
-const bool DEBUG = false;
+const bool DEBUG = true;
 
 // Convert string to unsigned int with error checking.
 unsigned int convertToUnsignedInt(const char *arg)
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
      {
           case ReplacementPolicy::LRU: replacement_policy = "LRU"; break;
           case ReplacementPolicy::FIFO: replacement_policy = "FIFO"; break;
-          case ReplacementPolicy::Optimal: replacement_policy = "Optimal"; break;
+          case ReplacementPolicy::Optimal: replacement_policy = "optimal"; break;
      }
      switch (property)
      {

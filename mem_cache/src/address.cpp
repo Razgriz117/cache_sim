@@ -35,4 +35,17 @@ Address::Address(unsigned int address, unsigned int blockSize, unsigned int numS
 
      // Remaining bits are the tag
      tag = address >> (offsetLength + indexLength);
+
+     // Shave off the block offset bits to get the prefix to each block.
+     blockPrefix = address >> offsetLength;
+     blockPrefix = blockPrefix << offsetLength;
+}
+
+std::string Address::blockToString()
+{
+     std::stringstream stream;
+     stream << std::hex << blockPrefix;
+     std::string block(stream.str());
+
+     return block;
 }

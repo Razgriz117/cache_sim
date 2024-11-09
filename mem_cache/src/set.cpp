@@ -73,6 +73,7 @@ std::optional<std::reference_wrapper<Block>> Set::allocate(const Address &addr)
      {
           case ReplacementPolicy::LRU:
                victim_idx = get_LRU_replacement();
+               update_LRU(victim_idx);
                break;
 
           case ReplacementPolicy::FIFO:
@@ -108,15 +109,13 @@ std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
 
           Block &block = hit->get();
           block.setDirty();
-          dirty_output();
+          // dirty_output();
 
           // Update replacement policy.
           if (replacement_policy == ReplacementPolicy::LRU)
           {
                unsigned int idx = getIdx(addr);
                update_LRU(idx);
-               // LRU_counters[idx] = LRU;
-               // LRU++;
           }
           return HIT; // No victim
      }
@@ -127,7 +126,7 @@ std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
           // Create new block.
           Block block = Block(blocksize, addr);
           block.setDirty();
-          dirty_output();
+          // dirty_output();
           fillBlock(block);
           return EMPTY_BLOCK; // No victim
      }
@@ -137,7 +136,9 @@ std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
      switch (replacement_policy)
      {
           case ReplacementPolicy::LRU:
-               victim_idx = get_LRU_replacement(); break;
+               victim_idx = get_LRU_replacement();
+               update_LRU(victim_idx);
+               break;
 
           case ReplacementPolicy::FIFO:
                victim_idx = get_FIFO_replacement(); break;
@@ -157,7 +158,7 @@ std::optional<std::reference_wrapper<Block>> Set::write(const Address &addr)
      // { Get data arg. Do something. Need tag. }
 
      blocks[victim_idx].setDirty();
-     dirty_output();
+     // dirty_output();
 
      Block &victim_ref = victim_block;
      return victim_ref;
@@ -202,6 +203,15 @@ void Set::fillBlock(const Block &block)
      // Add data.
      // { Get data arg. Do something }
 
+     for (int i = 0; i < assoc; i++)
+     {
+          if (blocks[i].isAvailable())
+          {
+               open_block = i;
+               break;
+          }
+     }
+
      // Update replacement policy.
      FIFO_indices.push(open_block);
      update_LRU(open_block);
@@ -211,59 +221,7 @@ void Set::fillBlock(const Block &block)
      blocks[open_block].occupy();
      size++;
 
-     for (int i = 0; i < assoc; i++)
-     {
-          if (blocks[i].isAvailable())
-          {
-               open_block = i;
-               return;
-          }
-     }
-
 }
-
-// void Set::fillBlock(const Block &block)
-// {
-//      // Add data.
-//      // { Get data arg. Do something }
-
-//      // Update replacement policy.
-//      FIFO_indices.push(open_block);
-//      update_LRU(open_block);
-//      // LRU_counters[open_block] = LRU;
-//      // LRU++;
-
-//      // If it's the first time filling the blocks array, push back.
-//      if (blocks.size() <= size)
-//      {
-//           blocks.push_back(block);
-//           size++;
-//           open_block++;
-//           return;
-//      }
-//      // Otherwise, insert block at the current open position and look for other open spot.
-//      else
-//      {
-//           blocks[open_block] = block;
-//           blocks[open_block].occupy();
-//           size++;
-
-//           // If the set still has open spaces, find the first open space to place the next
-//           // block.
-//           if (isFull()) return;
-//           else
-//           {
-//                for (int i = 0; i < assoc; i++)
-//                {
-//                     if (!blocks[i].isAvailable())
-//                     {
-//                          open_block = i;
-//                          return;
-//                     }
-//                }
-//           }
-//      }
-// }
 
 Block Set::replaceBlock_FIFO(const Address &addr)
 {
@@ -292,11 +250,6 @@ unsigned int Set::get_LRU_replacement()
 
      // Calculate the index from the iterator
      unsigned int victim_idx = std::distance(LRU_counters.begin(), minIt);
-
-     // Update most recently used.
-     update_LRU(victim_idx);
-     // LRU_counters[victim_idx] = LRU;
-     // LRU++;
 
      return victim_idx;
 }
@@ -336,42 +289,56 @@ unsigned int Set::get_optimal_replacement()
           unused_block_indices.push_back(i);
 
      // Track usage of blocks in set trace until one block in set is unused.
-     unsigned int trace_address;
-     while (trace_idx < trace.size())
+     unsigned int trace_address_block;
+     unsigned int search_idx = trace_idx;
+     while (search_idx < trace.size())
      {
           // Mark any blocks which match the current trace address as used.
-          trace_address = trace[trace_idx].value;
-          mark_used(trace_address, unused_block_indices);
-          trace_idx++;
+          trace_address_block = trace[search_idx].blockPrefix;
+          mark_used(trace_address_block, unused_block_indices);
+          search_idx++;
+
+          // for (auto idx : unused_block_indices)
+          // {
+          //      std::cout << "Unused " << idx << ": ";
+          //      std::cout << blocks[idx].getAddress() << std::endl;
+          // }
+          // std::cout << std::endl;
 
           // If we've removed all but one block from our list of unused,
           // the only block left is either last to be reused or never used at all.
-          if (unused_block_indices.size() == 1)
-               return ONLY_BLOCK;
+          if (unused_block_indices.size() == 1) return unused_block_indices[ONLY_BLOCK];
      }
 
      // If we reach this line, there is a tie for unused blocks. Return the first of them.
-     return FIRST_OF_REMAINING;
+     return unused_block_indices[FIRST_OF_REMAINING];
 }
 
-void Set::mark_used(unsigned int address, std::vector<unsigned int> &indices)
+void Set::mark_used(unsigned int trace_address_block, std::vector<unsigned int> &indices)
 {
      // Check each block in our unused blocks list to see if it matches the current trace.
      for (unsigned int index : indices)
      {
+
           // Each time a trace address matches an item in our list of unused blocks,
           // mark that block as used (i.e. remove from list of unused).
-          if (blocks[index].getAddress().value == address)
+          if (blocks[index].getAddress().blockPrefix == trace_address_block)
           {
                // Removes unique cell containing "index" from indices vector.
                auto it = std::find(indices.begin(), indices.end(), index);
                if (it != indices.end()) indices.erase(it);
-
-               // Removes all instances of index from indices vector.
-               // indices.erase(
-               //     std::remove(indices.begin(), indices.end(), index), indices.end()
-               // );
           }
+     }
+}
+
+void Set::print_trace()
+{
+     for (int i = 0; i < trace.size(); i++)
+     {
+          Address& address = trace[i];
+          std::cout << "Address " << i << ": " << address << std::endl;
+          std::cout << "Block " << i << ": ";
+          std::cout << address.blockToString() << std::endl << std::endl;;
      }
 }
 

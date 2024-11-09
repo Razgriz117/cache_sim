@@ -71,6 +71,8 @@ std::optional<std::reference_wrapper<Block>> Cache::read(unsigned int addr)
           hit_output();
           unsigned int idx = set.getIdx(address);
           set.update_LRU(idx);
+          
+          set.update_optimal();
           return found_block;
      }
 
@@ -79,12 +81,22 @@ std::optional<std::reference_wrapper<Block>> Cache::read(unsigned int addr)
      {
           read_misses++;
           miss_output();
+          set.update_optimal();
           if (next_mem_level != NULL)
-               next_mem_level->read(addr);
-          return MISS;
+          {
+               allocate(addr);
+               auto result = next_mem_level->read(addr);
+               if (result)
+               {
+                    Block &loaded_block = result->get();
+                    
+                    return loaded_block;
+               }
+          }
      }
 
      // Error reading block.
+     
      return LOAD_FAILURE;
 }
 
@@ -104,6 +116,20 @@ std::optional<std::reference_wrapper<Block>> Cache::allocate(unsigned int addr)
      auto address = Address(addr, blocksize, numSets);
      Set &set = cache[address.setIndex];
 
+     // Victim output
+     auto hit = set.search(address);
+     if (hit)
+     {
+     }
+     else if (!set.isFull())
+     {
+          no_victim_output();
+     }
+     else
+     {
+          unsigned int victim_idx = set.get_LRU_replacement();
+          victim_output(set.blocks[victim_idx]);
+     }
 
      // Write to the set marked by the address's set index.
      bool displaced_victim = false;
@@ -111,34 +137,17 @@ std::optional<std::reference_wrapper<Block>> Cache::allocate(unsigned int addr)
      if (victim)
      {
           Block victim_block = victim->get();
-          victim_output(victim_block);
+          // victim_output(victim_block);
           displaced_victim = true;
      }
      else
      {
-          no_victim_output();
-     }
-
-     // Maintain inclusive property.
-     if (inclusion_property == InclusionProperty::Inclusive && next_mem_level != NULL)
-     {
-          // If block was evicted, remove it from lower level caches.
-          if (victim && prev_mem_level != NULL)
-          {
-               Block victim_block = victim->get();
-               unsigned int victim_address = victim_block.getAddress().value;
-               prev_mem_level->delete_block(victim_address);
-          }
-          // A block allocated to this cache must be included in next level of memory.
-          next_mem_level->write(addr);
+          // no_victim_output();
      }
 
      // If we evicted a block during allocation, write back to next level of memory.
      if (displaced_victim)
      {
-          // std::cout << "ALLOCATE: WRITE BACK!!!!!!!" << std::endl;
-          // std::cout << "NAME: " << name << std::endl;
-          // std::cout << "TOTAL WRITE BACKS: " << write_backs << std::endl;
           Block victim_block = victim->get();
           if (victim_block.isDirty() && next_mem_level != NULL)
           {
@@ -147,6 +156,18 @@ std::optional<std::reference_wrapper<Block>> Cache::allocate(unsigned int addr)
           }
           Block &victim_ref = victim_block;
           return victim_ref;
+     }
+
+     // Maintain inclusive property.
+     if ((inclusion_property == InclusionProperty::Inclusive) && prev_mem_level != NULL)
+     {
+          // If block was evicted, remove it from lower level caches.
+          if (displaced_victim)
+          {
+               Block victim_block = victim->get();
+               unsigned int victim_address = victim_block.getAddress().value;
+               prev_mem_level->delete_block(victim_address);
+          }
      }
 
      // No victim block.
@@ -173,48 +194,29 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
      Set &set = cache[address.setIndex];
 
      // Load block if it already exists in cache.
+     bool miss_flag = false;
      std::optional<std::reference_wrapper<Block>> found_block = EMPTY_BLOCK;
      auto result = set.search(address);
      if (result)
      {
           found_block = result->get();
           hit_output();
+          set.update_optimal();
      }
 
      // If we miss, attempt to update block read from lower level caches.
      else if (result == MISS)
      {
+          miss_flag = true;
           write_misses++;
           miss_output();
-          if (next_mem_level != NULL)
-          {
-               found_block = next_mem_level->read(addr);
-               if (found_block)
-               {
-                    Block &blocky = found_block->get();
-                    Block current(blocksize, address);
-                    if (blocky.isDirty()) current.setDirty();
-               }
-               // if (load_result) found_block = load_result;
-               // else
-               // {
-               //      std::cout << "Error loading " << std::hex << addr;
-               //      std::cout << " from lower caches." << std::endl;
-               //      return LOAD_FAILURE;
-               // }
-          }
      }
 
-     if (!found_block)
-     {
-          std::cout << "ERROR: Block " << std::hex << addr << "not found." << std::endl;
-          return LOAD_FAILURE;
-     }
-
-     Block &found_block_ref = found_block->get();
      Block block(blocksize, address);
-     if (found_block_ref.isDirty())
-          block.setDirty();
+     if (miss_flag && next_mem_level != NULL)
+     {
+          found_block = next_mem_level->read(addr);
+     }
 
      // Write to the set marked by the address's set index.
      auto victim = set.write(block);
@@ -226,30 +228,11 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
           displaced_victim = true;
      }
      else
-     {
           no_victim_output();
-     }
-
-     // Maintain inclusive property.
-     if (inclusion_property == InclusionProperty::Inclusive && next_mem_level != NULL)
-     {
-          // If block was evicted, remove it from lower level caches.
-          if (victim && prev_mem_level != NULL)
-          {
-               Block victim_block = victim->get();
-               unsigned int victim_address = victim_block.getAddress().value;
-               prev_mem_level->delete_block(victim_address);
-          }
-          // A block written to this cache must be included in next level of memory.
-          next_mem_level->write(addr);
-     }
 
      // If we evicted a block during writing, write back to next level of memory.
      if (displaced_victim)
      {
-          // std::cout << "WRITE: WRITE BACK!!!!!!!" << std::endl;
-          // std::cout << "NAME: " << name << std::endl;
-          // std::cout << "TOTAL WRITE BACKS: " << write_backs << std::endl;
           Block victim_block = victim->get();
           if (victim_block.isDirty() && next_mem_level != NULL)
           {
@@ -257,10 +240,27 @@ std::optional<std::reference_wrapper<Block>> Cache::write(unsigned int addr)
                next_mem_level->write(victim_block.getAddress().value);
           }
           Block &victim_ref = victim_block;
+          set.dirty_output();
+          set.update_optimal();
           return victim_ref;
      }
 
+     // Maintain inclusive property.
+     if ((inclusion_property == InclusionProperty::Inclusive) && prev_mem_level != NULL)
+     {
+          // If block was evicted, remove it from lower level caches.
+          if (displaced_victim)
+          {
+               Block victim_block = victim->get();
+               unsigned int victim_address = victim_block.getAddress().value;
+               prev_mem_level->delete_block(victim_address);
+          }
+     }
+
      // No victim block.
+     
+     set.dirty_output();
+     set.update_optimal();
      return EMPTY_BLOCK;
 }
 
@@ -303,6 +303,9 @@ std::optional<std::reference_wrapper<Block>> Cache::load(unsigned int addr)
 
 void Cache::delete_block(unsigned int addr)
 {
+     if (name == "MAIN_MEMORY")
+          return;
+
      // Decode address.
      auto address = Address(addr, blocksize, numSets);
 
@@ -312,14 +315,31 @@ void Cache::delete_block(unsigned int addr)
      set.delete_block(address);
 
      // Maintain inclusion property.
-     if (inclusion_property == InclusionProperty::Inclusive && prev_mem_level != NULL)
-          prev_mem_level->delete_block(addr);
+     if (inclusion_property == InclusionProperty::Inclusive && next_mem_level != NULL)
+          next_mem_level->delete_block(addr);
 }
 
-double Cache::calculate_miss_rate()
+void Cache::update_optimal(unsigned int addr)
+{
+     auto address = Address(addr, blocksize, numSets);
+
+     return;
+}
+
+    double
+    Cache::calculate_miss_rate()
 {
      if (reads + writes == 0) return 0.0;
-     miss_rate = static_cast<double>(read_misses + write_misses) / (reads + writes);
+     unsigned int wrongs;
+     if (write_misses == 0)
+     {
+          wrongs = 0;
+     }
+     else
+     {
+          wrongs = writes;
+     }
+     miss_rate = static_cast<double>(read_misses + write_misses) / (reads + wrongs);
      return miss_rate;
 }
 
@@ -327,22 +347,34 @@ void Cache::construct_set_traces(std::vector<Instruction> &instructions)
 {
      for (auto &instruction : instructions)
      {
+
+          // Extract address from instruction.
+          auto address = Address(instruction.address, blocksize, numSets);
+
           for (int curr_set = 0; curr_set < numSets; curr_set++)
           {
-               // Get current set.
-               Set &set = cache[curr_set];
-
-               // Extract address from instruction.
-               auto address = Address(instruction.address, blocksize, numSets);
-
                // Append address to set trace if it maps to the current set.
                if (address.setIndex == curr_set)
                {
+                    // Get current set.
+                    Set &set = cache[curr_set];
                     set.trace.push_back(address);
                     break;
                }
           }
      }
+
+     // std::cout << "CACHE: " << name << std::endl;
+     // for (int i = 0; i < cache.size(); i++)
+     // {
+     //      std::cout << "Set " << i << " trace: " << std::endl;
+     //      for (auto addr : cache[i].trace)
+     //      {
+     //           std::cout << "  Address:  " << addr << std::endl;
+     //           std::cout << "  Block: " << addr.blockToString() << std::endl;
+     //           std::cout << std::endl;
+     //      }
+     // }
 }
 
 void Cache::print_contents()
@@ -367,7 +399,7 @@ void Cache::address_output(const Address &address)
      tag_stream << std::hex << tag;
 
      std::ostringstream address_stream;
-     address_stream << std::hex << address.value;
+     address_stream << std::hex << address.blockPrefix;
 
      std::cout << address_stream.str() << " ";
      std::cout << "(tag " << tag_stream.str() << ", index " << index;

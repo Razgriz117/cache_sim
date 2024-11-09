@@ -10,11 +10,16 @@ class Address
 public:
      Address(unsigned int address, unsigned int blocksize, unsigned int numSets);
      Address(const Address &addr)
-         : tag(addr.tag), setIndex(addr.setIndex), blockOffset(addr.blockOffset), 
-           value(addr.value) {}
+         : tag(addr.tag), setIndex(addr.setIndex), blockOffset(addr.blockOffset),
+           value(addr.value), blockPrefix(addr.blockPrefix),
+           offsetLength(addr.offsetLength), indexLength(addr.indexLength),
+           tagLength(addr.tagLength) {}
+
+     std::string blockToString();
 
      unsigned int value;
      unsigned int blockOffset;
+     unsigned int blockPrefix;
      unsigned int setIndex;
      unsigned int tag;
 
