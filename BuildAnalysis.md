@@ -878,3 +878,294 @@ If you want, say the word and I’ll drop a little **Python** script that:
 ```
 
 Works on GNU ld, lld, and ld64 with tiny per-platform differences for the map flag.
+
+---
+# Automated Check for Extracted Archive Members (.o files)
+Absolutely — here’s a self-contained Python script that:
+
+* finds the CMake `link.txt` for a given executable target,
+* replays the **exact** link command once with a map-file flag and a **temporary output** (so it won’t touch your real exe),
+* parses the produced map file to list:
+
+  * standalone object files that were linked,
+  * archive members actually extracted from static libs (e.g. `libX.a(member.o)` / `Foo.lib(Member.obj)`),
+  * linked shared libraries, and
+  * writes a compact JSON report.
+
+It works on Linux/macOS (GNU ld or lld, and Apple ld64) and Windows/MSVC.
+
+```python
+#!/usr/bin/env python3
+"""
+Relink-with-map (no CMake edits):
+
+Given a CMake build dir and target name, this script:
+  1) locates build/CMakeFiles/<target>.dir/link.txt
+  2) replays the link command with:
+       - map flag  (-Wl,-Map=<file>  or  -Wl,-map,<file>  or  /MAP:<file>)
+       - temp /OUT path so the real exe is untouched
+  3) parses the map and emits JSON with:
+       - object_files (standalone .o/.obj)
+       - archive_members: { archive_path: [member1.o, member2.o, ...] }
+       - shared_libs
+       - map_path, temp_output_path, relink_status
+
+Usage:
+  python relink_map_report.py --build build --target my_app \
+      --out report.json [--dry-run] [--link-txt path/to/link.txt]
+
+Notes:
+  * Requires that your generator is NOT Ninja (this script uses link.txt).
+  * On Windows/MSVC, we read the link line from link.txt and add /MAP:/OUT:.
+  * If link.txt uses @response.rsp files, they are preserved as-is.
+"""
+
+from __future__ import annotations
+import argparse
+import json
+import os
+import re
+import shlex
+import sys
+import tempfile
+import subprocess
+from pathlib import Path
+from typing import Dict, List, Tuple, Set
+
+def guess_linktxt(build_dir: Path, target: str) -> Path:
+    # Typical CMake layout (Unix Makefiles, VS, etc.)
+    candidate = build_dir / "CMakeFiles" / f"{target}.dir" / "link.txt"
+    if candidate.is_file():
+        return candidate
+    # Sometimes target may include path qualifiers; try a loose search
+    for p in (build_dir / "CMakeFiles").rglob("link.txt"):
+        if target in str(p.parent.name):
+            return p
+    raise FileNotFoundError(f"Could not find link.txt for target '{target}' under {build_dir}")
+
+def is_windows() -> bool:
+    return os.name == "nt"
+
+def make_temp_paths(linktxt: Path, target: str) -> Tuple[Path, Path]:
+    tdir = linktxt.parent
+    # temp output lives next to link.txt to avoid path issues with relative inputs
+    temp_out = tdir / f"{target}.tmp_relink{'.exe' if is_windows() else ''}"
+    map_path = tdir / f"{target}.tmp_relink.map"
+    return temp_out, map_path
+
+def inject_map_and_out(cmdline: str, temp_out: Path, map_path: Path) -> str:
+    """
+    Append platform-appropriate linker map flags and override output path.
+    We *do not* remove existing output flags; we append ours which should
+    override (ld) or we replace /OUT for MSVC explicitly.
+    """
+    if is_windows():
+        # MSVC link.exe link lines often appear like:
+        #   link.exe ... /OUT:"path\to\prog.exe" ... @objects.rsp
+        # Safest: replace any /OUT: with our temp, otherwise append.
+        # Also append /MAP:mapfile
+        # The line in link.txt often starts with the compiler driver invoking the linker;
+        # we just append linker flags — MSVC accepts them.
+        out_flag = f'/OUT:"{str(temp_out)}"'
+        map_flag = f'/MAP:"{str(map_path)}"'
+
+        # Replace any existing /OUT:... (case-insensitive) with ours
+        parts = shlex.split(cmdline, posix=False)
+        new_parts = []
+        replaced_out = False
+        for p in parts:
+            if p.upper().startswith("/OUT:"):
+                new_parts.append(out_flag)
+                replaced_out = True
+            else:
+                new_parts.append(p)
+        if not replaced_out:
+            new_parts.append(out_flag)
+        new_parts.append(map_flag)
+        return " ".join(new_parts)
+    else:
+        # On ELF (ld.bfd/lld): -Wl,-Map,<file>
+        # On macOS (ld64):     -Wl,-map,<file>
+        # We can detect macOS by sys.platform == 'darwin'
+        map_switch = "-Wl,-map," if sys.platform == "darwin" else "-Wl,-Map,"
+        # Append map flag and override -o to temp_out by appending a later -o
+        # (ld drivers honor the last -o)
+        return f'{cmdline} {map_switch}{shlex.quote(str(map_path))} -o {shlex.quote(str(temp_out))}'
+
+# Regexes to mine common map-file shapes across linkers
+RE_ARCH_MEMBER_POSIX = re.compile(r'(?P<archive>\S+\.a)\((?P<member>[^)]+\.o)\)')
+RE_ARCH_MEMBER_MSVC  = re.compile(r'(?P<archive>\S+\.lib)\((?P<member>[^)]+\.obj)\)', re.IGNORECASE)
+RE_OBJ               = re.compile(r'(?P<obj>\S+\.(?:o|obj))\b', re.IGNORECASE)
+RE_SHARED            = re.compile(r'(?P<so>\S+\.(?:so(?:\.\d+)*|dylib|dll))\b', re.IGNORECASE)
+
+def parse_map_file(map_text: str) -> Tuple[Set[str], Dict[str, Set[str]], Set[str]]:
+    object_files: Set[str] = set()
+    archive_members: Dict[str, Set[str]] = {}
+    shared_libs: Set[str] = set()
+
+    # Archive members first (they also contain ".o", so record them distinctly)
+    for m in RE_ARCH_MEMBER_POSIX.finditer(map_text):
+        arch = m.group("archive")
+        mem = m.group("member")
+        archive_members.setdefault(arch, set()).add(mem)
+    for m in RE_ARCH_MEMBER_MSVC.finditer(map_text):
+        arch = m.group("archive")
+        mem = m.group("member")
+        archive_members.setdefault(arch, set()).add(mem)
+
+    # Standalone object files (not reported as "(archive(member))")
+    for m in RE_OBJ.finditer(map_text):
+        text = m.group("obj")
+        # Skip occurrences that were already captured as "archive(member)"
+        # Heuristic: if immediately preceded by ')', it's likely already counted
+        start = m.start()
+        if start > 0 and map_text[start - 1] == ')':
+            continue
+        object_files.add(text)
+
+    # Shared libraries (ELF .so, macOS .dylib, Windows .dll)
+    for m in RE_SHARED.finditer(map_text):
+        shared_libs.add(m.group("so"))
+
+    return object_files, archive_members, shared_libs
+
+def run(cmd: str) -> subprocess.CompletedProcess:
+    # We intentionally use shell=True to preserve @response files and quoting as in link.txt
+    return subprocess.run(cmd, shell=True, check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+def main():
+    ap = argparse.ArgumentParser(description="Relink a CMake target once with a linker map and parse it (no CMake edits).")
+    ap.add_argument("--build", required=True, type=Path, help="CMake build directory")
+    ap.add_argument("--target", required=True, help="CMake target name of the executable")
+    ap.add_argument("--out", type=Path, default=None, help="Write JSON report to this path (default: print to stdout)")
+    ap.add_argument("--link-txt", type=Path, default=None, help="Optional explicit path to link.txt")
+    ap.add_argument("--dry-run", action="store_true", help="Print the would-be relink command but do not execute")
+    args = ap.parse_args()
+
+    linktxt = args.link_txt if args.link_txt else guess_linktxt(args.build, args.target)
+    link_cmd = linktxt.read_text(encoding="utf-8", errors="replace").strip()
+    if not link_cmd:
+        raise RuntimeError(f"{linktxt} is empty")
+
+    temp_out, map_path = make_temp_paths(linktxt, args.target)
+    relink_cmd = inject_map_and_out(link_cmd, temp_out, map_path)
+
+    result: Dict[str, object] = {
+        "target": args.target,
+        "build_dir": str(args.build),
+        "link_txt": str(linktxt),
+        "temp_output_path": str(temp_out),
+        "map_path": str(map_path),
+        "relink_status": "skipped" if args.dry_run else "unknown",
+        "object_files": [],
+        "archive_members": {},
+        "shared_libs": [],
+        "stderr": "",
+        "stdout": "",
+        "note": "This report reflects what the linker chose during this relink; it does not modify your original executable.",
+    }
+
+    if args.dry_run:
+        print(relink_cmd)
+        return
+
+    # Ensure temp locations are writable/clean
+    try:
+        if map_path.exists():
+            map_path.unlink()
+        if temp_out.exists():
+            try:
+                temp_out.unlink()
+            except PermissionError:
+                pass
+    except Exception:
+        pass
+
+    proc = run(relink_cmd)
+    result["stdout"] = proc.stdout.decode(errors="replace")
+    result["stderr"] = proc.stderr.decode(errors="replace")
+    result["relink_status"] = f"returncode={proc.returncode}"
+
+    if not map_path.exists():
+        # Some linkers only create map if link succeeds; also some toolchains may require different flag
+        raise RuntimeError(
+            f"Map file was not created at {map_path}. "
+            f"Return code {proc.returncode}. Stderr:\n{result['stderr']}"
+        )
+
+    map_text = map_path.read_text(encoding="utf-8", errors="replace")
+
+    objs, arch_members, shlibs = parse_map_file(map_text)
+    result["object_files"] = sorted(objs)
+    # Convert sets to sorted lists for JSON
+    result["archive_members"] = {k: sorted(v) for k, v in sorted(arch_members.items())}
+    result["shared_libs"] = sorted(shlibs)
+
+    # Emit JSON
+    js = json.dumps(result, indent=2)
+    if args.out:
+        Path(args.out).write_text(js, encoding="utf-8")
+        print(f"Wrote report to {args.out}")
+    else:
+        print(js)
+
+    # Best-effort cleanup of temp output (keep the map by default so user can inspect)
+    try:
+        if temp_out.exists():
+            temp_out.unlink()
+    except Exception:
+        pass
+
+if __name__ == "__main__":
+    main()
+```
+
+### How to use it
+
+1. Build your project with CMake (any non-Ninja generator is fine).
+2. Run the script from your source tree root (or anywhere), pointing at the **build** dir and **target** name:
+
+```bash
+python relink_map_report.py --build build --target my_app --out my_app-map.json
+```
+
+* On Windows/MSVC, the script will rewrite `/OUT:` and add `/MAP:`.
+* On macOS, it uses `-Wl,-map,<file>`.
+* On Linux/ELF it uses `-Wl,-Map,<file>`.
+
+If you just want to see the relink command it would run (without executing):
+
+```bash
+python relink_map_report.py --build build --target my_app --dry-run
+```
+
+### What you get back
+
+A JSON like:
+
+```json
+{
+  "target": "my_app",
+  "build_dir": "build",
+  "link_txt": "build/CMakeFiles/my_app.dir/link.txt",
+  "temp_output_path": "build/CMakeFiles/my_app.dir/my_app.tmp_relink",
+  "map_path": "build/CMakeFiles/my_app.dir/my_app.tmp_relink.map",
+  "relink_status": "returncode=0",
+  "object_files": [".../main.o", ".../util.o"],
+  "archive_members": {
+    "build/libfoo.a": ["foo1.o", "foo3.o"],
+    "build/libbar.a": ["bar2.o"]
+  },
+  "shared_libs": ["libpthread.so.0", "libm.so.6"],
+  "stderr": "",
+  "stdout": "",
+  "note": "This report reflects what the linker chose during this relink; it does not modify your original executable."
+}
+```
+
+### Notes & tweaks
+
+* If your `link.txt` refers to `@objects.rsp`, that still works; the script preserves it.
+* If the linker fails (e.g., because of environment differences), the script will surface stderr so you can adjust PATH/SDK vars as needed.
+* Map-file formats vary a bit; the regexes cover GNU ld, lld, ld64, and MSVC’s typical patterns. If you hit an odd format, send me a snippet and I’ll widen the parser.
+
