@@ -744,3 +744,137 @@ Static library **A** does not “link” **B** at its own build time; instead, C
 ### Bottom line
 
 Don’t recurse manually. Turn on the **linker’s map/verbose options** for the **final executable** and you’ll get an exact, authoritative list of which `.o` files—from any and all static libs—actually made it into the binary.
+
+Yes—there are solid, **scriptable** ways to get “which objects really made it into this executable” **without changing the CMake project**.
+
+Below are three practical, programmatic approaches. Pick the one that fits your situation and artifacts you already have.
+
+---
+
+# A) Re-link once with a map file (no CMake changes)
+
+You don’t touch `CMakeLists.txt`. You just **read the link command CMake already wrote**, add a flag that asks the linker to emit a map file, and run that one command into a **temporary output**. Parse the map.
+
+## Unix Makefiles / (most) CMake generators on Linux/macOS
+
+CMake writes the final link command to:
+
+```
+build/CMakeFiles/<exe>.dir/link.txt
+# Often it references @objects.rsp files (lists of .o files)
+```
+
+### Bash (minimal)
+
+```bash
+set -euo pipefail
+exe="my_app"                                  # <-- your target
+tdir="build/CMakeFiles/${exe}.dir"
+link_cmd=$(<"${tdir}/link.txt")
+
+# write temp output beside the original
+out="${tdir}/${exe}.tmp_mapcheck"
+map="${tdir}/${exe}.tmp_map"
+
+# Inject map flag (GNU ld & lld: -Wl,-Map=..., macOS ld64: -Wl,-map,...) and output path
+if [[ "$OSTYPE" == darwin* ]]; then
+  link_cmd+=" -Wl,-map,${map} -o ${out}"
+else
+  link_cmd+=" -Wl,-Map,${map} -o ${out}"
+fi
+
+echo "[*] Re-linking once to produce a map (no project edits)…"
+bash -lc "$link_cmd"
+
+echo "[*] Objects actually linked (with archive membership):"
+# GNU ld / lld / ld64 all put archive members in the map; print typical patterns
+grep -E '(\.o\b|\.obj\b)' "$map" | sed 's/^[[:space:]]*//'
+```
+
+**What you get:** exact `.o` members taken from each static `.a` (and plain objects).
+This is authoritative and includes members pulled from static libs—no recursion needed.
+
+> Variants:
+>
+> * Windows (MSVC): read the link command from the VS/Build logs or response file near the target, append `/MAP:link.map`, set `/OUT:tmp.exe`, run once, parse `link.map`.
+> * If the link used `@response.rsp`, keep it—it expands to the same arguments.
+
+---
+
+# B) Read the **debug info** from the finished binary (no rebuild at all)
+
+If the exe was built with debug symbols, you can list the contributing compilation units (and thus source paths). This proves which TUs contributed code; it **doesn’t** list **unused** objects inside static libraries.
+
+## Linux/macOS (DWARF)
+
+```bash
+# Linux: directly on the executable
+llvm-dwarfdump --debug-line path/to/my_app | awk '/file_names|include_directories/{flag=1} flag{print}'
+
+# macOS: use the dSYM DWARF payload
+llvm-dwarfdump --debug-line path/to/my_app.dSYM/Contents/Resources/DWARF/my_app
+```
+
+You can post-process those file lists to map paths back to object names if you follow your object layout conventions, but DWARF itself doesn’t retain “archive member” names.
+
+## Windows (PDB)
+
+```bat
+:: Lists modules (object/object-libreco) that contributed to the image
+llvm-pdbutil dump -modules path\to\my_app.pdb
+```
+
+This is very close to “which .obj files are in the final image,” and requires no relink.
+
+---
+
+# C) Mine build artifacts that CMake already emitted (no relink, no project edits)
+
+Depending on generator:
+
+* **Unix Makefiles**
+
+  * `build/CMakeFiles/<exe>.dir/link.txt` → final link line.
+  * If it references `@objects*.rsp`, open those to get the exact `.o` passed to the linker.
+  * This tells you **candidate inputs**; it won’t distinguish which archive members were *actually* extracted. (Use A) if you need that precision.)
+
+* **MSBuild / Visual Studio**
+
+  * The **tlogs** contain what the linker read:
+    `build\<Config>\<exe>.tlog\link.read.*.tlog`
+    Parse those to enumerate the `.obj` and `.lib` inputs actually consumed.
+
+* **Xcode**
+
+  * Verbose build logs show the link line; Xcode also writes `*.LinkFileList` files with the object inputs. (Again: inputs, not which archive members were extracted.)
+
+* **CMake File API (generator-agnostic)**
+
+  * Query `build/.cmake/api/v1/reply/*target-*.json` for the target to enumerate object and library inputs programmatically. (Good for automation tooling; won’t identify the subset of archive members actually used—use A) for that.)
+
+---
+
+## Which should you use?
+
+* **Need the precise set of archive members the linker pulled?** → **A) Re-link once with a map** and parse it. No project edits; you just replay one command with an extra flag and a temp output name.
+* **Binary already has debug info and you want “which TUs contributed code”?** → **B) DWARF/PDB** parsing.
+* **You just want the list of objects that were *passed* to the linker** (good enough for many checks) → **C) Parse `link.txt` / `.rsp` / tlogs**.
+
+If you want, say the word and I’ll drop a little **Python** script that:
+
+1. Locates `link.txt`,
+2. Replays the link with a temp output + map flag,
+3. Parses the map to emit a JSON like:
+
+```json
+{
+  "object_files": [".../foo.o", ".../bar.o"],
+  "archive_members": {
+    "libA.a": ["a1.o", "a7.o"],
+    "libB.a": ["b2.o"]
+  },
+  "shared_libs": ["libm.so.6", "libpthread.so.0"]
+}
+```
+
+Works on GNU ld, lld, and ld64 with tiny per-platform differences for the map flag.
